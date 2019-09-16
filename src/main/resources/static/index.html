@@ -95,6 +95,8 @@
 						initInvestimentos();
 						initMask();
 
+						$('[data-toggle="tooltip"]').tooltip();
+
 						$("#botaoCalcular")
 
 								.click(
@@ -119,9 +121,16 @@
 
 															projInvest = data.projecaoInvestimento;
 															projSaques = data.projecaoSaque;
+															alert(projSaques.periodoSaque.anos);
 															$('#qtdeMaxSaques')
 																	.val(
 																			projSaques.qtdeMaxSaques);
+															$("#periodoSaques")
+																	.val(
+																			projSaques.periodoSaque.anos
+																					+ " ano(s) e "
+																					+ projSaques.periodoSaque.meses
+																					+ " mes(es)");
 															$(
 																	'#valorPrimeiroSaque')
 																	.val(
@@ -174,6 +183,7 @@
 															$("#aliquotaReal")
 																	.val(
 																			projInvest.aliquotaReal);
+
 															toMoneyFormat();
 
 														},
@@ -225,7 +235,7 @@
 	<nav class="navbar navbar-inverse">
 		<div class="container">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="#">Vinc.com.br - Fluxo de
+				<a class="navbar-brand" href="#">Vinc&reg; - Fluxo de
 					Investimentos para a Aposentadoria </a>
 			</div>
 		</div>
@@ -243,7 +253,9 @@
 						<input type="text" class="form-control moneyMask"
 							id="valorInicial" />
 					</div>
-
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="Eh o valor do montante que se possui no momento do primeiro aporte."></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -251,6 +263,9 @@
 					<div class="col-sm-4">
 						<input type="text" class="form-control moneyMask" id="valorAporte" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="Eh o valor do aporte mensal que se deseja fazer."></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -258,6 +273,9 @@
 					<div class="col-sm-4">
 						<input type="text" class="form-control moneyMask" id="valorSaque" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="Eh o valor do saque mensal que se deseja fazer durante toda a aposentadoria."></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -265,6 +283,9 @@
 					<div class="col-sm-4">
 						<input type="text" class="form-control inteiro" id="qtdeAportes" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="Eh o numero de aportes que se deseja efetuar ate o inicio dos saques (inicio da aposentadoria)."></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -273,6 +294,9 @@
 						<input type="text" class="form-control moneyMask"
 							id="aliquotaAplicacao" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="Eh a aliquota anual da aplicacao que se espera fazer no inicio dos investimentos"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -281,6 +305,9 @@
 						<input type="text" class="form-control moneyMask"
 							id="aliquotaReaplicacao" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="Eh a aliquota anual da aplicacao que se espera fazer no inicio dos investimentos"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -288,6 +315,9 @@
 					<div class="col-sm-4">
 						<input type="text" class="form-control moneyMask" id="aliquotaIR" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="Eh a aliquota media de Imposto de Renda sobre os saques efetuados."></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -296,6 +326,9 @@
 						<input type="text" class="form-control moneyMask"
 							id="aliquotaInflacao" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="Eh a aliquota media da inflacao anual."></div>
 				</div>
 
 
@@ -309,7 +342,8 @@
 						<input type="text" class="form-control moneyFormat"
 							id="valorFinal" readonly="readonly" disabled="disabled" />
 					</div>
-
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -318,6 +352,8 @@
 						<input type="text" class="form-control moneyFormat" id="valorReal"
 							readonly="readonly" disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -326,6 +362,8 @@
 						<input type="text" class="form-control moneyFormat"
 							id="valorInvestido" readonly="readonly" disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -336,6 +374,8 @@
 							id="valorInvestidoDepreciado" readonly="readonly"
 							disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -344,6 +384,8 @@
 						<input type="text" class="form-control moneyFormat"
 							id="aliquotaGanhoFinal" readonly="readonly" disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -352,6 +394,8 @@
 						<input type="text" class="form-control moneyFormat"
 							id="aliquotaAplicacaoMes" readonly="readonly" disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -360,6 +404,8 @@
 						<input type="text" class="form-control moneyFormat"
 							id="aliquotaReal" readonly="readonly" disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -369,6 +415,8 @@
 							id="aliquotaInflacaoAcumulada" readonly="readonly"
 							disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -379,6 +427,8 @@
 							id="aliquotaInflacaoAcumuladaMes" readonly="readonly"
 							disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 
@@ -393,7 +443,17 @@
 						<input type="text" class="form-control inteiro" id="qtdeMaxSaques"
 							readonly="readonly" disabled="disabled" />
 					</div>
-
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
+				</div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Tempo Máx. Saques</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" id="periodoSaques"
+							readonly="readonly" disabled="disabled" />
+					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -403,6 +463,8 @@
 						<input type="text" class="form-control moneyFormat"
 							id="valorPrimeiroSaque" readonly="readonly" disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -412,6 +474,8 @@
 						<input type="text" class="form-control moneyFormat"
 							id="valorUltimoSaque" readonly="readonly" disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 
 				<div class="form-group form-group-sm">
@@ -420,6 +484,8 @@
 						<input type="text" class="form-control moneyFormat"
 							id="valorRestante" readonly="readonly" disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip" title="XXXXXX"></div>
 				</div>
 			</div>
 			<div class="form-horizontal form-group form-group-sm col-sm-12">

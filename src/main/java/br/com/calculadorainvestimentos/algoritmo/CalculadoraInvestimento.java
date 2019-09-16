@@ -4,6 +4,7 @@ import static java.lang.Math.pow;
 
 import br.com.calculadorainvestimentos.model.FluxoInvestimento;
 import br.com.calculadorainvestimentos.model.Investimento;
+import br.com.calculadorainvestimentos.model.PeriodoSaque;
 import br.com.calculadorainvestimentos.model.ProjecaoInvestimento;
 import br.com.calculadorainvestimentos.model.ProjecaoSaque;
 
@@ -101,6 +102,7 @@ public class CalculadoraInvestimento {
         projSaque.setValorRestante(valorRestante);
         projSaque.setValorUltimoSaque(valorUltimoSaque);
         projSaque.setAliquotaReaplicacaoMes(indiceReaplicacaoMes * 100);
+        projSaque.setPeriodoSaque(new PeriodoSaque(qtdeMaxSaques));
 
         return new FluxoInvestimento(projInvest, projSaque);
     }

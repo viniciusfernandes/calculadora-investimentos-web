@@ -4,6 +4,7 @@ public class ProjecaoSaque {
     private double valorPrimeiroSaque;
     private double valorUltimoSaque;
     private int qtdeMaxSaques;
+    private PeriodoSaque periodoSaque;
     private double valorRestante;
     private double aliquotaReaplicacaoMes;
 
@@ -45,6 +46,14 @@ public class ProjecaoSaque {
 
     public void setValorRestante(final double valorRestante) {
         this.valorRestante = valorRestante;
+    }
+
+    public PeriodoSaque getPeriodoSaque() {
+        return periodoSaque;
+    }
+
+    public void setPeriodoSaque(final PeriodoSaque periodoSaque) {
+        this.periodoSaque = periodoSaque;
     }
 
 }

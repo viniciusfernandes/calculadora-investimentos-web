@@ -94,7 +94,7 @@ public class Main {
 
         out.println("\n\nSaques\n" + MARGEM);
         out.println("Primeiro Saque : " + NumberFormat.getCurrencyInstance().format(projSaque.getValorPrimeiroSaque()));
-        out.println("�ltimo Saque   : " + NumberFormat.getCurrencyInstance().format(projSaque.getValorUltimoSaque()));
+        out.println("Ultimo Saque   : " + NumberFormat.getCurrencyInstance().format(projSaque.getValorUltimoSaque()));
         out.println("Reaplic. Mes   : " + formatarAliquota(projSaque.getAliquotaReaplicacaoMes()));
         out.println("Val. Restante  : " + NumberFormat.getCurrencyInstance().format(projSaque.getValorRestante()));
 
