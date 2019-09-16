@@ -13,6 +13,32 @@
 <script src="js/jquery.mask.js"></script>
 
 <script type="text/javascript">
+	function moneyMask(amount) {
+		try {
+			var decimalCount = 2;
+			var decimal = ",";
+			var thousands = ".";
+			decimalCount = Math.abs(decimalCount);
+			decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+			const negativeSign = amount < 0 ? "-" : "";
+
+			let i = parseInt(
+					amount = Math.abs(Number(amount) || 0)
+							.toFixed(decimalCount)).toString();
+			let j = (i.length > 3) ? i.length % 3 : 0;
+
+			return negativeSign
+					+ (j ? i.substr(0, j) + thousands : '')
+					+ i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands)
+					+ (decimalCount ? decimal
+							+ Math.abs(amount - i).toFixed(decimalCount).slice(
+									2) : "");
+		} catch (e) {
+			console.log(e)
+		}
+	};
+
 	function initInvestimentos() {
 		$('#aliquotaAplicacao').val(8);
 		$('#aliquotaReaplicacao').val(5);
@@ -21,16 +47,14 @@
 		$('#qtdeAportes').val(240);
 		$('#valorAporte').val(2000);
 		$('#valorSaque').val(1500);
-		$('#valorInicial').val(50000.0)
+		$('#valorInicial').val(50000.0);
 	};
 
 	function initMask() {
-		$('.money').mask("#.##0,00", {
+		$('.moneyMask').mask("#.##0,00", {
 			reverse : true
 		});
-		$('.percente').mask("#.##0,00", {
-			reverse : true
-		});
+
 		$('.inteiro').mask("#", {
 			reverse : false
 		});
@@ -58,6 +82,12 @@
 
 		return invest;
 	}
+
+	function toMoneyFormat() {
+		$('.moneyFormat').each(function(e) {
+			$(this).val(moneyMask($(this).val()));
+		});
+	};
 	$(document)
 			.ready(
 					function() {
@@ -86,7 +116,6 @@
 																					null,
 																					4)
 																	+ "</pre>";
-															//$('#feedback').html(json);
 
 															projInvest = data.projecaoInvestimento;
 															projSaques = data.projecaoSaque;
@@ -145,6 +174,7 @@
 															$("#aliquotaReal")
 																	.val(
 																			projInvest.aliquotaReal);
+															toMoneyFormat();
 
 														},
 														error : function(e) {
@@ -152,8 +182,6 @@
 															var json = "<h4>Ajax Response</h4><pre>"
 																	+ e.responseText
 																	+ "</pre>";
-															$('#feedback')
-																	.html(json);
 
 															console.log(
 																	"ERROR : ",
@@ -170,14 +198,12 @@
 														type : "post",
 														contentType : "application/json",
 														url : "/actuator/shutdown",
-														data : JSON
-																.stringify(investimentos()),
 														success : function(data) {
 
-															var json = "<h4>ENCERRANDO O SISTEMA!!!</h4><pre>"
+															var json = "<pre><h4>ENCERRANDO O SISTEMA!!!</h4></pre>"
 															$('#feedback')
 																	.html(json);
-
+															$('#divCampos').html("");
 															console
 																	.log(
 																			"SUCCESS : ",
@@ -185,6 +211,7 @@
 
 														}
 													});
+
 										});
 
 					});
@@ -203,18 +230,22 @@
 		</div>
 	</nav>
 
+
+
+
+
+
 	<div class="container" style="min-height: 500px">
 
-		<div class="starter-template">
+		<div id="feedback"></div>
 
-
-			<div id="feedback"></div>
-
+		<div id="divCampos" class="starter-template">
 			<div class="form-horizontal form-group form-group-sm col-sm-4">
 				<div class="form-group form-group-sm">
 					<label class="col-sm-4 control-label">Valor Inicial (R$)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control money" id="valorInicial" />
+						<input type="text" class="form-control moneyMask"
+							id="valorInicial" />
 					</div>
 
 				</div>
@@ -222,14 +253,14 @@
 				<div class="form-group form-group-sm">
 					<label class="col-sm-4 control-label">Valor Aporte (R$)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control money" id="valorAporte" />
+						<input type="text" class="form-control moneyMask" id="valorAporte" />
 					</div>
 				</div>
 
 				<div class="form-group form-group-sm">
 					<label class="col-sm-4 control-label">Valor Saque (R$)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control money" id="valorSaque" />
+						<input type="text" class="form-control moneyMask" id="valorSaque" />
 					</div>
 				</div>
 
@@ -243,7 +274,7 @@
 				<div class="form-group form-group-sm">
 					<label class="col-sm-4 control-label">Aplicação (%)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control percente"
+						<input type="text" class="form-control moneyMask"
 							id="aliquotaAplicacao" />
 					</div>
 				</div>
@@ -251,7 +282,7 @@
 				<div class="form-group form-group-sm">
 					<label class="col-sm-4 control-label">Reaplicação (%)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control percente"
+						<input type="text" class="form-control moneyMask"
 							id="aliquotaReaplicacao" />
 					</div>
 				</div>
@@ -259,39 +290,28 @@
 				<div class="form-group form-group-sm">
 					<label class="col-sm-4 control-label">IR (%)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control percente" id="aliquotaIR" />
+						<input type="text" class="form-control moneyMask" id="aliquotaIR" />
 					</div>
 				</div>
 
 				<div class="form-group form-group-sm">
 					<label class="col-sm-4 control-label">Inflação (%)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control percente"
+						<input type="text" class="form-control moneyMask"
 							id="aliquotaInflacao" />
 					</div>
 				</div>
 
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-4">
-						<button type="button" id="botaoCalcular"
-							class="btn btn-primary btn-lg">Calcular</button>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-4">
-						<button type="button" id="botaoShutdown"
-							class="btn btn-primary btn-lg">Encerrar</button>
-					</div>
-				</div>
 
 			</div>
+
 
 			<div class="form-horizontal form-group form-group-sm col-sm-4">
 				<div class="form-group form-group-sm">
 					<label class="col-sm-5 control-label">Val. Final (R$)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control money" id="valorFinal"
-							readonly="readonly" disabled="disabled" />
+						<input type="text" class="form-control moneyFormat"
+							id="valorFinal" readonly="readonly" disabled="disabled" />
 					</div>
 
 				</div>
@@ -299,7 +319,7 @@
 				<div class="form-group form-group-sm">
 					<label class="col-sm-5 control-label">Val. Real (R$)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control money" id="valorReal"
+						<input type="text" class="form-control moneyFormat" id="valorReal"
 							readonly="readonly" disabled="disabled" />
 					</div>
 				</div>
@@ -307,8 +327,8 @@
 				<div class="form-group form-group-sm">
 					<label class="col-sm-5 control-label">Val. Investido (R$)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control money" id="valorInvestido"
-							readonly="readonly" disabled="disabled" />
+						<input type="text" class="form-control moneyFormat"
+							id="valorInvestido" readonly="readonly" disabled="disabled" />
 					</div>
 				</div>
 
@@ -316,7 +336,7 @@
 					<label class="col-sm-5 control-label">Val. com Inflação
 						(R$)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control money"
+						<input type="text" class="form-control moneyFormat"
 							id="valorInvestidoDepreciado" readonly="readonly"
 							disabled="disabled" />
 					</div>
@@ -325,7 +345,7 @@
 				<div class="form-group form-group-sm">
 					<label class="col-sm-5 control-label">Ganho Final (%)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control percente"
+						<input type="text" class="form-control moneyFormat"
 							id="aliquotaGanhoFinal" readonly="readonly" disabled="disabled" />
 					</div>
 				</div>
@@ -333,7 +353,7 @@
 				<div class="form-group form-group-sm">
 					<label class="col-sm-5 control-label">Ganho Mês (%)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control percente"
+						<input type="text" class="form-control moneyFormat"
 							id="aliquotaAplicacaoMes" readonly="readonly" disabled="disabled" />
 					</div>
 				</div>
@@ -341,15 +361,15 @@
 				<div class="form-group form-group-sm">
 					<label class="col-sm-5 control-label">Ganho Real Mês (%)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control percente" id="aliquotaReal"
-							readonly="readonly" disabled="disabled" />
+						<input type="text" class="form-control moneyFormat"
+							id="aliquotaReal" readonly="readonly" disabled="disabled" />
 					</div>
 				</div>
 
 				<div class="form-group form-group-sm">
 					<label class="col-sm-5 control-label">Infl. Acumulada (%)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control percente"
+						<input type="text" class="form-control moneyFormat"
 							id="aliquotaInflacaoAcumulada" readonly="readonly"
 							disabled="disabled" />
 					</div>
@@ -359,7 +379,7 @@
 					<label class="col-sm-5 control-label">Infl. Acumulada Mês
 						(%)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control percente"
+						<input type="text" class="form-control moneyFormat"
 							id="aliquotaInflacaoAcumuladaMes" readonly="readonly"
 							disabled="disabled" />
 					</div>
@@ -384,7 +404,7 @@
 					<label class="col-sm-5 control-label">Val. Primeiro Saque
 						(R$)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control money"
+						<input type="text" class="form-control moneyFormat"
 							id="valorPrimeiroSaque" readonly="readonly" disabled="disabled" />
 					</div>
 				</div>
@@ -393,7 +413,7 @@
 					<label class="col-sm-5 control-label">Val. Último Saque
 						(R$)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control money"
+						<input type="text" class="form-control moneyFormat"
 							id="valorUltimoSaque" readonly="readonly" disabled="disabled" />
 					</div>
 				</div>
@@ -401,14 +421,26 @@
 				<div class="form-group form-group-sm">
 					<label class="col-sm-5 control-label">Val. Restante (R$)</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control money" id="valorRestante"
-							readonly="readonly" disabled="disabled" />
+						<input type="text" class="form-control moneyFormat"
+							id="valorRestante" readonly="readonly" disabled="disabled" />
 					</div>
 				</div>
 			</div>
-
+			<div class="form-horizontal form-group form-group-sm col-sm-12">
+				<div class="form-group col-sm-6">
+					<div>
+						<button type="button" id="botaoCalcular"
+							class="btn btn-primary btn-lg">Calcular</button>
+					</div>
+				</div>
+				<div class="form-group col-sm-6">
+					<div>
+						<button type="button" id="botaoShutdown"
+							class="btn btn-danger btn-lg">Encerrar</button>
+					</div>
+				</div>
+			</div>
 		</div>
-
 	</div>
 
 	<div class="container">
