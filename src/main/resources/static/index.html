@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Fluxo de Investimentos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="js/jquery.mask.js"></script>
+
+<script type="text/javascript">
+	function initInvestimentos() {
+		$('#aliquotaAplicacao').val(8);
+		$('#aliquotaReaplicacao').val(5);
+		$('#aliquotaIR').val(12);
+		$('#aliquotaInflacao').val(4.5);
+		$('#qtdeAportes').val(240);
+		$('#valorAporte').val(2000);
+		$('#valorSaque').val(1500);
+		$('#valorInicial').val(50000.0)
+	};
+
+	function initMask() {
+		$('.money').mask("#.##0,00", {
+			reverse : true
+		});
+		$('.percente').mask("#.##0,00", {
+			reverse : true
+		});
+		$('.inteiro').mask("#", {
+			reverse : false
+		});
+	};
+
+	function investimentos() {
+		var invest = {};
+
+		invest["aliquotaAplicacao"] = $('#aliquotaAplicacao').val().replace(
+				'.', '').replace(',', '.');
+		invest["aliquotaReaplicacao"] = $('#aliquotaReaplicacao').val()
+				.replace('.', '').replace(',', '.');
+		invest["aliquotaIR"] = $('#aliquotaIR').val().replace('.', '').replace(
+				',', '.');
+		invest["aliquotaInflacao"] = $('#aliquotaInflacao').val().replace('.',
+				'').replace(',', '.');
+		invest["qtdeAportes"] = $('#qtdeAportes').val().replace('.', '')
+				.replace(',', '.');
+		invest["valorAporte"] = $('#valorAporte').val().replace('.', '')
+				.replace(',', '.');
+		invest["valorSaque"] = $('#valorSaque').val().replace('.', '').replace(
+				',', '.');
+		invest["valorInicial"] = $('#valorInicial').val().replace('.', '')
+				.replace(',', '.');
+
+		return invest;
+	}
+	$(document)
+			.ready(
+					function() {
+
+						initInvestimentos();
+						initMask();
+
+						$("#botaoCalcular")
+
+								.click(
+										function(event) {
+
+											$
+													.ajax({
+														type : "post",
+														contentType : "application/json",
+														url : "/investimentos/calculo",
+														data : JSON
+																.stringify(investimentos()),
+														success : function(data) {
+
+															var json = "<h4>Ajax Response</h4><pre>"
+																	+ JSON
+																			.stringify(
+																					data,
+																					null,
+																					4)
+																	+ "</pre>";
+															//$('#feedback').html(json);
+
+															projInvest = data.projecaoInvestimento;
+															projSaques = data.projecaoSaque;
+															$('#qtdeMaxSaques')
+																	.val(
+																			projSaques.qtdeMaxSaques);
+															$(
+																	'#valorPrimeiroSaque')
+																	.val(
+																			projSaques.valorPrimeiroSaque);
+															$(
+																	'#valorUltimoSaque')
+																	.val(
+																			projSaques.valorUltimoSaque);
+															$('#valorRestante')
+																	.val(
+																			projSaques.valorRestante);
+
+															$("#valorFinal")
+																	.val(
+																			projInvest.valorFinal);
+															$("#valorReal")
+																	.val(
+																			projInvest.valorReal);
+															$(
+																	"#valorInvestidoDepreciado")
+																	.val(
+																			projInvest.valorInvestidoDepreciado);
+															$("#valorInvestido")
+																	.val(
+																			projInvest.valorInvestido);
+															$(
+																	"#aliquotaInflacaoMes")
+																	.val(
+																			projInvest.aliquotaInflacaoMes);
+															$(
+																	"#aliquotaInflacaoAcumulada")
+																	.val(
+																			projInvest.aliquotaInflacaoAcumulada);
+															$(
+																	"#aliquotaInflacaoAcumuladaMes")
+																	.val(
+																			projInvest.aliquotaInflacaoAcumuladaMes);
+															$(
+																	"#aliquotaGanhoFinal")
+																	.val(
+																			projInvest.aliquotaGanhoFinal);
+															$(
+																	"#aliquotaGanhoReal")
+																	.val(
+																			projInvest.aliquotaGanhoReal);
+															$(
+																	"#aliquotaAplicacaoMes")
+																	.val(
+																			projInvest.aliquotaAplicacaoMes);
+															$("#aliquotaReal")
+																	.val(
+																			projInvest.aliquotaReal);
+
+														},
+														error : function(e) {
+
+															var json = "<h4>Ajax Response</h4><pre>"
+																	+ e.responseText
+																	+ "</pre>";
+															$('#feedback')
+																	.html(json);
+
+															console.log(
+																	"ERROR : ",
+																	e);
+														}
+													});
+										});
+
+						$("#botaoShutdown")
+								.click(
+										function(event) {
+											$
+													.ajax({
+														type : "post",
+														contentType : "application/json",
+														url : "/actuator/shutdown",
+														data : JSON
+																.stringify(investimentos()),
+														success : function(data) {
+
+															var json = "<h4>ENCERRANDO O SISTEMA!!!</h4><pre>"
+															$('#feedback')
+																	.html(json);
+
+															console
+																	.log(
+																			"SUCCESS : ",
+																			data);
+
+														}
+													});
+										});
+
+					});
+</script>
+<link rel="stylesheet" type="text/css"
+	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+</head>
+<body>
+
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Vinc.com.br - Fluxo de
+					Investimentos para a Aposentadoria </a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container" style="min-height: 500px">
+
+		<div class="starter-template">
+
+
+			<div id="feedback"></div>
+
+			<div class="form-horizontal form-group form-group-sm col-sm-4">
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Valor Inicial (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control money" id="valorInicial" />
+					</div>
+
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Valor Aporte (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control money" id="valorAporte" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Valor Saque (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control money" id="valorSaque" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Qtde. Aportes</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control inteiro" id="qtdeAportes" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Aplicação (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control percente"
+							id="aliquotaAplicacao" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Reaplicação (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control percente"
+							id="aliquotaReaplicacao" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">IR (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control percente" id="aliquotaIR" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Inflação (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control percente"
+							id="aliquotaInflacao" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-4">
+						<button type="button" id="botaoCalcular"
+							class="btn btn-primary btn-lg">Calcular</button>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-4">
+						<button type="button" id="botaoShutdown"
+							class="btn btn-primary btn-lg">Encerrar</button>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="form-horizontal form-group form-group-sm col-sm-4">
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Final (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control money" id="valorFinal"
+							readonly="readonly" disabled="disabled" />
+					</div>
+
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Real (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control money" id="valorReal"
+							readonly="readonly" disabled="disabled" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Investido (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control money" id="valorInvestido"
+							readonly="readonly" disabled="disabled" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. com Inflação
+						(R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control money"
+							id="valorInvestidoDepreciado" readonly="readonly"
+							disabled="disabled" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Ganho Final (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control percente"
+							id="aliquotaGanhoFinal" readonly="readonly" disabled="disabled" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Ganho Mês (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control percente"
+							id="aliquotaAplicacaoMes" readonly="readonly" disabled="disabled" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Ganho Real Mês (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control percente" id="aliquotaReal"
+							readonly="readonly" disabled="disabled" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Infl. Acumulada (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control percente"
+							id="aliquotaInflacaoAcumulada" readonly="readonly"
+							disabled="disabled" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Infl. Acumulada Mês
+						(%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control percente"
+							id="aliquotaInflacaoAcumuladaMes" readonly="readonly"
+							disabled="disabled" />
+					</div>
+				</div>
+
+
+
+
+			</div>
+
+			<div class="form-horizontal form-group form-group-sm col-sm-4">
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Qtde. Máx. Saques</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control inteiro" id="qtdeMaxSaques"
+							readonly="readonly" disabled="disabled" />
+					</div>
+
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Primeiro Saque
+						(R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control money"
+							id="valorPrimeiroSaque" readonly="readonly" disabled="disabled" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Último Saque
+						(R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control money"
+							id="valorUltimoSaque" readonly="readonly" disabled="disabled" />
+					</div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Restante (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control money" id="valorRestante"
+							readonly="readonly" disabled="disabled" />
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="container">
+		<footer>
+			<p>
+				© <a href="http://www.vinc.com.br">Vinc.com.br</a> 2019
+			</p>
+		</footer>
+	</div>
+
+</body>
+</html>
