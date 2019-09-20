@@ -62,7 +62,7 @@ public class CalculadoraInvestimento {
 
 		valorFinal = calcularValorFinal();
 		valorInvestido = calcularValorInvestido();
-		valorReal = valorAporte * calcularIndiceAcumulado(qtdeAportes, indiceReal);
+		valorReal = calcularValorReal();
 		valorInvestidoDepreciado = valorAporte * calcularIndiceAcumulado(qtdeAportes, -indiceInflacaoMes);
 
 		indiceGanhoFinal = (valorFinal - valorInvestido) / valorInvestido;
@@ -115,7 +115,7 @@ public class CalculadoraInvestimento {
 		double idxAcumulado = 0;
 
 		for (int i = 0; i < quantidade; i++) {
-			idxAcumulado += pow(1 + idxRendimento, i) * pow(1 + idxRendimento, quantidade - i);
+			idxAcumulado += pow(1 + idxInflacao, i) * pow(1 + idxRendimento, quantidade - i);
 		}
 
 		return idxAcumulado;
@@ -142,6 +142,10 @@ public class CalculadoraInvestimento {
 		return val;
 	}
 
+	private double calcularValorReal() {
+		return valorAporte * calcularIndiceAcumulado(qtdeAportes, indiceReal);
+	}
+
 	private void calcularQtdeMaxSaquesEValorRestante() {
 		final int idxSaqueInicial = qtdeAportes;
 
@@ -149,7 +153,7 @@ public class CalculadoraInvestimento {
 		final double indiceLucro = calcularIndiceLucroMedio();
 
 		calcularQtdeMaxSaques(valorFinal, valorSaqueFuturo, indiceInflacaoMes, indiceReaplicacaoMes, indiceLucro, 0);
-		valorUltimoSaque = valorSaque * pow(1 + indiceInflacaoMes, qtdeAportes + qtdeMaxSaques - 1d);
+		valorUltimoSaque = valorPrimeiroSaque * pow(1 + indiceInflacaoMes, qtdeMaxSaques - 1d);
 	}
 
 	private void calcularQtdeMaxSaques(double valorFinal, double valorSaque, final double indiceInflacao,
