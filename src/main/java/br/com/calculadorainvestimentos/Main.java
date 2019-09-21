@@ -19,102 +19,17 @@ import br.com.calculadorainvestimentos.model.ProjecaoInvestimento;
 import br.com.calculadorainvestimentos.model.ProjecaoSaque;
 
 public class Main {
-    private static final String MARGEM = "---------------------------------------";
-    private static final String MARGEM_DUPLA = MARGEM + MARGEM;
-    private static final String ESPACO = "\n+\n+\n+\n+\n+\n+\n+\n+\n+\n+\n";
     private static final DecimalFormat DF = new DecimalFormat("#.###");
     private static final String pathDir = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     private static final File dir = new File(pathDir).getParentFile();
     private static final File dadosInvestimento = new File(dir.getAbsolutePath() + File.separator + "investimento.txt");
+    private static final String ESPACO = "\n+\n+\n+\n+\n+\n+\n+\n+\n+\n+\n";
     private static boolean hasFile = false;
-    private static final Scanner scanner = new Scanner(System.in);
     private static boolean isPrimeiraExecucao = true;
+    private static final String MARGEM = "---------------------------------------";
+    private static final String MARGEM_DUPLA = MARGEM + MARGEM;
     private static Properties props = null;
-
-    public static void main(final String[] args) {
-        gerarArquivoInvestimento();
-
-        System.out.println(MARGEM_DUPLA);
-        System.out.println("Preencha o arquivo: investimento.txt");
-        System.out.println(MARGEM_DUPLA);
-
-        String comando = "";
-        boolean leituraOk = true;
-        while (true) {
-            if (leituraOk) {
-                printInstrucaoInicial();
-            }
-
-            comando = scanner.nextLine();
-            if (!"s".equalsIgnoreCase(comando)) {
-                scanner.close();
-                System.out.println("\n" + MARGEM);
-                System.out.println("FIM");
-                System.out.println(MARGEM);
-                return;
-            }
-            try {
-                gerarFluxoInvestimento();
-                leituraOk = true;
-            } catch (final Exception e) {
-                System.out.println(ESPACO);
-                System.out.println("HOUVE UMA FALHA NA LEITURA DO ARQUIVO DE INVESTIMENTO.");
-                leituraOk = false;
-                dadosInvestimento.delete();
-                gerarArquivoInvestimento();
-
-                System.out.println("O arquivo foi gerado no mesmo diretorio. Preencha os valores novamente.");
-                printInstrucaoInicial();
-            }
-
-        }
-    }
-
-    private static void print(final ProjecaoInvestimento projecaoInvest) {
-        out.println("\n\nInvestimentos\n" + MARGEM);
-        out.println("Tempo Invest.  : " + formatarTempo(projecaoInvest.getQtdeAportes()));
-
-        out.println("Val. Investido : " + NumberFormat.getCurrencyInstance().format(projecaoInvest.getValorInvestido()));
-        out.println("Val. Depreci.  : " + NumberFormat.getCurrencyInstance().format(projecaoInvest.getValorInvestidoDepreciado()));
-        out.println("Val. Final     : " + NumberFormat.getCurrencyInstance().format(projecaoInvest.getValorFinal()));
-        out.println("Val. Real      : " + NumberFormat.getCurrencyInstance().format(projecaoInvest.getValorReal()));
-
-        out.println("Rend. Mensal   : " + formatarAliquota(projecaoInvest.getAliquotaAplicacaoMes()));
-        out.println("Rend. Real     : " + formatarAliquota(projecaoInvest.getAliquotaReal()));
-
-        out.println("Infl. Mes      : " + formatarAliquota(projecaoInvest.getAliquotaInflacaoMes()));
-        out.println("Infl. Acum.    : " + formatarAliquota(projecaoInvest.getAliquotaInflacaoAcumulada()));
-        out.println("Infl. Acum. Mes: " + formatarAliquota(projecaoInvest.getAliquotaInflacaoAcumuladaMes()));
-
-        out.println("Rend. Final    : " + formatarAliquota(projecaoInvest.getAliquotaGanhoFinal()));
-        out.println("Rend. Real     : " + formatarAliquota(projecaoInvest.getAliquotaGanhoReal()));
-    }
-
-    private static void print(final ProjecaoSaque projSaque) {
-
-        out.println("\n\nSaques\n" + MARGEM);
-        out.println("Primeiro Saque : " + NumberFormat.getCurrencyInstance().format(projSaque.getValorPrimeiroSaque()));
-        out.println("Ultimo Saque   : " + NumberFormat.getCurrencyInstance().format(projSaque.getValorUltimoSaque()));
-        out.println("Reaplic. Mes   : " + formatarAliquota(projSaque.getAliquotaReaplicacaoMes()));
-        out.println("Val. Restante  : " + NumberFormat.getCurrencyInstance().format(projSaque.getValorRestante()));
-
-        out.println("Qtde. Max. Saq.: "
-            + (projSaque.getQtdeMaxSaques() >= CalculadoraInvestimento.QTDE_MAX_SAQUES ? "SEM LIMITES" : projSaque.getQtdeMaxSaques()));
-        out.println("Tempo Max. Saq.: " + (projSaque.getQtdeMaxSaques() >= CalculadoraInvestimento.QTDE_MAX_SAQUES ? "SEM LIMITES"
-                        : formatarTempo(projSaque.getQtdeMaxSaques())));
-        out.println(MARGEM);
-    }
-
-    private static void print(final Investimento invest) {
-        out.println(MARGEM + "\nValores Iniciais\n" + MARGEM);
-        out.println("Valor Inicial  : " + NumberFormat.getCurrencyInstance().format(invest.getValorInicial()));
-        out.println("Aporte Mensal  : " + NumberFormat.getCurrencyInstance().format(invest.getValorAporte()));
-        out.println("Saque Mensal   : " + NumberFormat.getCurrencyInstance().format(invest.getValorSaque()));
-        out.println("Qtde Aportes   : " + invest.getQtdeAportes());
-        out.println("Aliq. Aplic.   : " + formatarAliquota(invest.getAliquotaAplicacao()));
-        out.println("Aliq. Reaplic. : " + formatarAliquota(invest.getAliquotaReaplicacao()));
-        out.println(MARGEM);
-    }
+    private static final Scanner scanner = new Scanner(System.in);
 
     private static String formatarAliquota(final double aliquota) {
         return (DF.format(aliquota) + "%").replace(".", ",");
@@ -194,6 +109,22 @@ public class Main {
         }
     }
 
+    private static void gerarFluxoInvestimento() throws Exception {
+        final Investimento investimento = gerarInvetimento();
+        final FluxoInvestimento fluxo = new CalculadoraInvestimento().calcular(investimento);
+
+        if (!isPrimeiraExecucao) {
+            System.out.println(ESPACO);
+        }
+
+        isPrimeiraExecucao = false;
+
+        print(investimento);
+        print(fluxo.getProjecaoInvestimento());
+        print(fluxo.getProjecaoSaque());
+
+    }
+
     private static Investimento gerarInvetimento() throws Exception {
         props = new Properties();
         FileInputStream file;
@@ -215,24 +146,93 @@ public class Main {
 
     }
 
-    private static void gerarFluxoInvestimento() throws Exception {
-        final Investimento investimento = gerarInvetimento();
-        final FluxoInvestimento fluxo = new CalculadoraInvestimento().calcular(investimento);
+    public static void main(final String[] args) {
+        gerarArquivoInvestimento();
 
-        if (!isPrimeiraExecucao) {
-            System.out.println(ESPACO);
+        System.out.println(MARGEM_DUPLA);
+        System.out.println("Preencha o arquivo: investimento.txt");
+        System.out.println(MARGEM_DUPLA);
+
+        String comando = "";
+        boolean leituraOk = true;
+        while (true) {
+            if (leituraOk) {
+                printInstrucaoInicial();
+            }
+
+            comando = scanner.nextLine();
+            if (!"s".equalsIgnoreCase(comando)) {
+                scanner.close();
+                System.out.println("\n" + MARGEM);
+                System.out.println("FIM");
+                System.out.println(MARGEM);
+                return;
+            }
+            try {
+                gerarFluxoInvestimento();
+                leituraOk = true;
+            } catch (final Exception e) {
+                System.out.println(ESPACO);
+                System.out.println("HOUVE UMA FALHA NA LEITURA DO ARQUIVO DE INVESTIMENTO.");
+                leituraOk = false;
+                dadosInvestimento.delete();
+                gerarArquivoInvestimento();
+
+                System.out.println("O arquivo foi gerado no mesmo diretorio. Preencha os valores novamente.");
+                printInstrucaoInicial();
+            }
+
         }
-
-        isPrimeiraExecucao = false;
-
-        print(investimento);
-        print(fluxo.getProjecaoInvestimento());
-        print(fluxo.getProjecaoSaque());
-
     }
 
     private static Double parse(final String property) {
         return Double.parseDouble(props.getProperty(property));
+    }
+
+    private static void print(final Investimento invest) {
+        out.println(MARGEM + "\nValores Iniciais\n" + MARGEM);
+        out.println("Valor Inicial  : " + NumberFormat.getCurrencyInstance().format(invest.getValorInicial()));
+        out.println("Aporte Mensal  : " + NumberFormat.getCurrencyInstance().format(invest.getValorAporte()));
+        out.println("Saque Mensal   : " + NumberFormat.getCurrencyInstance().format(invest.getValorSaque()));
+        out.println("Qtde Aportes   : " + invest.getQtdeAportes());
+        out.println("Aliq. Aplic.   : " + formatarAliquota(invest.getAliquotaAplicacao()));
+        out.println("Aliq. Reaplic. : " + formatarAliquota(invest.getAliquotaReaplicacao()));
+        out.println(MARGEM);
+    }
+
+    private static void print(final ProjecaoInvestimento projecaoInvest) {
+        out.println("\n\nInvestimentos\n" + MARGEM);
+        out.println("Tempo Invest.  : " + formatarTempo(projecaoInvest.getQtdeAportes()));
+
+        out.println("Val. Investido : " + NumberFormat.getCurrencyInstance().format(projecaoInvest.getValorInvestido()));
+        out.println("Val. Depreci.  : " + NumberFormat.getCurrencyInstance().format(projecaoInvest.getValorInvestidoDepreciado()));
+        out.println("Val. Final     : " + NumberFormat.getCurrencyInstance().format(projecaoInvest.getValorFinal()));
+        out.println("Val. Real      : " + NumberFormat.getCurrencyInstance().format(projecaoInvest.getValorReal()));
+
+        out.println("Rend. Mensal   : " + formatarAliquota(projecaoInvest.getAliquotaAplicacaoMes()));
+        out.println("Rend. Real     : " + formatarAliquota(projecaoInvest.getAliquotaReal()));
+
+        out.println("Infl. Mes      : " + formatarAliquota(projecaoInvest.getAliquotaInflacaoMes()));
+        out.println("Infl. Acum.    : " + formatarAliquota(projecaoInvest.getAliquotaInflacaoAcumulada()));
+        out.println("Infl. Acum. Mes: " + formatarAliquota(projecaoInvest.getAliquotaInflacaoAcumuladaMes()));
+
+        out.println("Rend. Final    : " + formatarAliquota(projecaoInvest.getAliquotaGanhoFinal()));
+        out.println("Rend. Real     : " + formatarAliquota(projecaoInvest.getAliquotaGanhoReal()));
+    }
+
+    private static void print(final ProjecaoSaque projSaque) {
+
+        out.println("\n\nSaques\n" + MARGEM);
+        out.println("Primeiro Saque : " + NumberFormat.getCurrencyInstance().format(projSaque.getValorPrimeiroSaque()));
+        out.println("Ultimo Saque   : " + NumberFormat.getCurrencyInstance().format(projSaque.getValorUltimoSaque()));
+        out.println("Reaplic. Mes   : " + formatarAliquota(projSaque.getAliquotaReaplicacaoMes()));
+        out.println("Val. Restante  : " + NumberFormat.getCurrencyInstance().format(projSaque.getValorRestante()));
+
+        out.println("Qtde. Max. Saq.: "
+            + (projSaque.getQtdeMaxSaques() >= CalculadoraInvestimento.QTDE_MAX_SAQUES ? "SEM LIMITES" : projSaque.getQtdeMaxSaques()));
+        out.println("Tempo Max. Saq.: " + (projSaque.getQtdeMaxSaques() >= CalculadoraInvestimento.QTDE_MAX_SAQUES ? "SEM LIMITES"
+                        : formatarTempo(projSaque.getQtdeMaxSaques())));
+        out.println(MARGEM);
     }
 
     public static void printInstrucaoInicial() {

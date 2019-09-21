@@ -1,10 +1,10 @@
 package br.com.calculadorainvestimentos.model;
 
 public class PeriodoSaque {
-    private int qtdeMaxSaque;
     private int anos;
-
     private int meses;
+
+    private int qtdeMaxSaque;
 
     public PeriodoSaque() {
 
@@ -15,6 +15,11 @@ public class PeriodoSaque {
         calcularPeriodo();
     }
 
+    public void calcularPeriodo() {
+        anos = qtdeMaxSaque / 12;
+        meses = qtdeMaxSaque % 12;
+    }
+
     public int getAnos() {
         return anos;
     }
@@ -23,21 +28,16 @@ public class PeriodoSaque {
         return meses;
     }
 
-    public void setAnos(final int anos) {
-        this.anos = anos;
-    }
-
     public int getQtdeMaxSaque() {
         return qtdeMaxSaque;
+    }
+
+    public void setAnos(final int anos) {
+        this.anos = anos;
     }
 
     public void setQtdeMaxSaque(final int qtdeMaxSaque) {
         this.qtdeMaxSaque = qtdeMaxSaque;
         calcularPeriodo();
-    }
-
-    public void calcularPeriodo() {
-        anos = qtdeMaxSaque / 12;
-        meses = qtdeMaxSaque % 12;
     }
 }

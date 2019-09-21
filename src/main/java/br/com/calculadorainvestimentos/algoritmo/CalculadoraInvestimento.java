@@ -10,72 +10,38 @@ import br.com.calculadorainvestimentos.model.ProjecaoSaque;
 
 public class CalculadoraInvestimento {
 
-	private double indiceAplicacao;
-	private double indiceInflacao;
-
-	private double indiceIR;
-	private double indiceReaplicacao;
-	private int qtdeAportes;
-	private double valorAporte;
-	private double valorSaque;
 	public static final int QTDE_MAX_SAQUES = 12 * 100;
+	private double indiceAplicacao;
 
 	private double indiceAplicacaoMes;
-	private double indiceReaplicacaoMes;
-
-	private double indiceInflacaoMes;
-	private double indiceReal;
-
-	private double valorInicial;
-	private double valorFinal;
-	private double valorInvestido;
-	private double valorReal;
-	private double valorInvestidoDepreciado;
-	private double valorPrimeiroSaque;
-	private double valorUltimoSaque;
-
 	private double indiceGanhoFinal;
 	private double indiceGanhoReal;
+	private double indiceInflacao;
 	private double indiceInflacaoAcumulada;
-
 	private double indiceInflacaoAcumuladaMes;
 
+	private double indiceInflacaoMes;
+	private double indiceIR;
+
+	private double indiceReal;
+	private double indiceReaplicacao;
+
+	private double indiceReaplicacaoMes;
+	private int qtdeAportes;
 	private int qtdeMaxSaques;
+	private double valorAporte;
+	private double valorFinal;
+	private double valorInicial;
+	private double valorInvestido;
+
+	private double valorInvestidoDepreciado;
+	private double valorPrimeiroSaque;
+	private double valorReal;
+
 	private double valorRestante;
 
-	private void inicializarIndices(final Investimento investimento) {
-		indiceAplicacao = investimento.getAliquotaAplicacao() / 100;
-		indiceReaplicacao = investimento.getAliquotaReaplicacao() / 100;
-		indiceIR = investimento.getAliquotaIR() / 100;
-		indiceInflacao = investimento.getAliquotaInflacao() / 100;
-		qtdeAportes = investimento.getQtdeAportes();
-		valorAporte = investimento.getValorAporte();
-		valorSaque = investimento.getValorSaque();
-		valorInicial = investimento.getValorInicial();
-	}
-
-	private void calcularIndicesMensaisEValores() {
-		indiceAplicacaoMes = calcularIndiceMensal(indiceAplicacao);
-		indiceInflacaoMes = calcularIndiceMensal(indiceInflacao);
-		indiceReal = calcularIndiceReal(indiceAplicacaoMes, indiceInflacaoMes);
-		indiceReaplicacaoMes = calcularIndiceMensal(indiceReaplicacao);
-
-		valorFinal = calcularValorFinal();
-		valorInvestido = calcularValorInvestido();
-		valorReal = calcularValorReal();
-		valorInvestidoDepreciado = valorAporte * calcularIndiceAcumulado(qtdeAportes, -indiceInflacaoMes);
-
-		indiceGanhoFinal = (valorFinal - valorInvestido) / valorInvestido;
-		indiceGanhoReal = (valorReal - valorInvestido) / valorInvestido;
-
-		if (valorInvestidoDepreciado != 0d) {
-			indiceInflacaoAcumulada = (valorInvestido - valorInvestidoDepreciado) / valorInvestidoDepreciado;
-		} else {
-			indiceInflacaoAcumulada = 0;
-		}
-		indiceInflacaoAcumuladaMes = calcularIndiceEquivalente(indiceInflacaoAcumulada, qtdeAportes);
-		valorPrimeiroSaque = valorSaque * pow(1 + indiceInflacaoMes, qtdeAportes);
-	}
+	private double valorSaque;
+	private double valorUltimoSaque;
 
 	public FluxoInvestimento calcular(final Investimento investimento) {
 		inicializarIndices(investimento);
@@ -121,39 +87,44 @@ public class CalculadoraInvestimento {
 		return idxAcumulado;
 	}
 
-	private double calcularIndiceMensal(final double indice) {
-		return calcularIndiceEquivalente(indice, 12);
-	}
-
 	private double calcularIndiceEquivalente(final double indice, final int periodo) {
 		return Math.pow(1 + indice, 1d / periodo) - 1;
+	}
+
+	private double calcularIndiceLucroMedio() {
+		final double indiceLucro = (valorFinal / valorInvestido - 1);
+		return calcularIndiceEquivalente(indiceLucro, qtdeAportes);
+	}
+
+	private double calcularIndiceMensal(final double indice) {
+		return calcularIndiceEquivalente(indice, 12);
 	}
 
 	private double calcularIndiceReal(final double indiceRendimento, final double indiceInflacao) {
 		return (1 + indiceRendimento) / (1 + indiceInflacao) - 1;
 	}
 
-	private double calcularValorInvestido() {
-		double val = 0;
-		for (int i = 1; i <= qtdeAportes; i++) {
-			val += valorAporte;
+	private void calcularIndicesMensaisEValores() {
+		indiceAplicacaoMes = calcularIndiceMensal(indiceAplicacao);
+		indiceInflacaoMes = calcularIndiceMensal(indiceInflacao);
+		indiceReal = calcularIndiceReal(indiceAplicacaoMes, indiceInflacaoMes);
+		indiceReaplicacaoMes = calcularIndiceMensal(indiceReaplicacao);
 
+		valorFinal = calcularValorFinal();
+		valorInvestido = calcularValorInvestido();
+		valorReal = calcularValorReal();
+		valorInvestidoDepreciado = valorAporte * calcularIndiceAcumulado(qtdeAportes, -indiceInflacaoMes);
+
+		indiceGanhoFinal = (valorFinal - valorInvestido) / valorInvestido;
+		indiceGanhoReal = (valorReal - valorInvestido) / valorInvestido;
+
+		if (valorInvestidoDepreciado != 0d) {
+			indiceInflacaoAcumulada = (valorInvestido - valorInvestidoDepreciado) / valorInvestidoDepreciado;
+		} else {
+			indiceInflacaoAcumulada = 0;
 		}
-		return val;
-	}
-
-	private double calcularValorReal() {
-		return valorAporte * calcularIndiceAcumulado(qtdeAportes, indiceReal);
-	}
-
-	private void calcularQtdeMaxSaquesEValorRestante() {
-		final int idxSaqueInicial = qtdeAportes;
-
-		final double valorSaqueFuturo = valorSaque * pow((1 + indiceInflacaoMes), idxSaqueInicial);
-		final double indiceLucro = calcularIndiceLucroMedio();
-
-		calcularQtdeMaxSaques(valorFinal, valorSaqueFuturo, indiceInflacaoMes, indiceReaplicacaoMes, indiceLucro, 0);
-		valorUltimoSaque = valorPrimeiroSaque * pow(1 + indiceInflacaoMes, qtdeMaxSaques - 1d);
+		indiceInflacaoAcumuladaMes = calcularIndiceEquivalente(indiceInflacaoAcumulada, qtdeAportes);
+		valorPrimeiroSaque = valorSaque * pow(1 + indiceInflacaoMes, qtdeAportes);
 	}
 
 	private void calcularQtdeMaxSaques(double valorFinal, double valorSaque, final double indiceInflacao,
@@ -176,14 +147,43 @@ public class CalculadoraInvestimento {
 		calcularQtdeMaxSaques(valorFinal, valorSaque, indiceInflacao, indiceReaplicacao, indiceLucro, numSaque);
 	}
 
-	private double calcularIndiceLucroMedio() {
-		final double indiceLucro = (valorFinal / valorInvestido - 1);
-		return calcularIndiceEquivalente(indiceLucro, qtdeAportes);
+	private void calcularQtdeMaxSaquesEValorRestante() {
+		final int idxSaqueInicial = qtdeAportes;
+
+		final double valorSaqueFuturo = valorSaque * pow((1 + indiceInflacaoMes), idxSaqueInicial);
+		final double indiceLucro = calcularIndiceLucroMedio();
+
+		calcularQtdeMaxSaques(valorFinal, valorSaqueFuturo, indiceInflacaoMes, indiceReaplicacaoMes, indiceLucro, 0);
+		valorUltimoSaque = valorPrimeiroSaque * pow(1 + indiceInflacaoMes, qtdeMaxSaques - 1d);
 	}
 
 	private double calcularValorFinal() {
 		final double idxAplicMes = calcularIndiceMensal(indiceAplicacao);
 		return valorInicial * pow(1 + idxAplicMes, qtdeAportes - 1d)
 				+ valorAporte * calcularIndiceAcumulado(qtdeAportes, idxAplicMes);
+	}
+
+	private double calcularValorInvestido() {
+		double val = 0;
+		for (int i = 1; i <= qtdeAportes; i++) {
+			val += valorAporte;
+
+		}
+		return val;
+	}
+
+	private double calcularValorReal() {
+		return valorAporte * calcularIndiceAcumulado(qtdeAportes, indiceReal);
+	}
+
+	private void inicializarIndices(final Investimento investimento) {
+		indiceAplicacao = investimento.getAliquotaAplicacao() / 100;
+		indiceReaplicacao = investimento.getAliquotaReaplicacao() / 100;
+		indiceIR = investimento.getAliquotaIR() / 100;
+		indiceInflacao = investimento.getAliquotaInflacao() / 100;
+		qtdeAportes = investimento.getQtdeAportes();
+		valorAporte = investimento.getValorAporte();
+		valorSaque = investimento.getValorSaque();
+		valorInicial = investimento.getValorInicial();
 	}
 }
