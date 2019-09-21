@@ -4,7 +4,12 @@
 <head>
 <title>Fluxo de Investimentos</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
+<style type="text/css">
+pre>h5, pre>span {
+	float: left;
+	width: 100%;
+}
+</style>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script
@@ -94,6 +99,14 @@
 
 						initInvestimentos();
 						initMask();
+						$('#oqueehDescricao').hide();
+						$('#oqueeh').hover(function(e) {
+							$('#oqueehDescricao').show(300);
+						});
+
+						$('#oqueeh').mouseout(function(e) {
+							$('#oqueehDescricao').hide(300);
+						});
 
 						$('[data-toggle="tooltip"]').tooltip();
 
@@ -204,9 +217,9 @@
 														url : "/actuator/shutdown",
 														success : function(data) {
 
-															var json = "<pre><h4>ENCERRANDO O SISTEMA!!!</h4></pre>"
 															$('#feedback')
-																	.html(json);
+																	.html(
+																			"<pre><h4>ENCERRANDO O SISTEMA!!!</h4></pre>");
 															$('#divCampos')
 																	.html("");
 															console
@@ -229,268 +242,282 @@
 	<nav class="navbar navbar-inverse">
 		<div class="container">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="#">Vinc&reg; - Fluxo de
-					Investimentos para a Aposentadoria </a>
+				<a class="navbar-brand" href="#"></a>
 			</div>
 		</div>
 	</nav>
+	<div class="container" style="min-height: 500px">
+		<div id="feedback"></div>
+		<div id="divCampos" class="starter-template">
+			<div class="form-group form-group-lg col-lg-12">
+				<label class="col-lg-11 control-label text-right"> Vinc&reg;
+					- Fluxo de Investimentos para a Aposentadoria.
+				</label>
+				<label id="oqueeh" class="col-lg-1 control-label text-left glyphicon glyphicon-question-sign">
+				</label>
+			</div>
+			<div class="form-group form-group-lg col-lg-12">
+				 <pre  id="oqueehDescricao" class="col-sm-12 control-label text-left">O objetivo principal eh simular um cenario simplificado de investimentos para
+se ter um fluxo de saques para a aposentadoria privada. A modelagem financeira pode ser exemplificada como a seguir: o investidor
+possui um valor inicial de R$100.000,00, e ele pretende aplicar esse montante com um rendimento anual de 8%. Novos aportes mensais
+de R$4.000,00 serao efetuados mensalmente com a mesma taxa de rendimento. Isso sera feito por 20 anos (240 aportes), e ao termino
+desse periodo, a quantia final sera direcionada para um investimento mais conservador que rende 5% ao ano. A partir desse
+momento, o investidor efetuara saques no valor de R$3.000,00 mensalmente. Alem disso, o Imposto de Renda incidira sobre o lucro
+de cada saque numa aliquota media de 10%. Lembrando que em cada saque, eh efetuada a correcao da inflacao anual media de 4.5%. </pre>
 
+			</div>
+			<div class="form-horizontal form-group form-group-sm col-sm-4">
 
-	<div id="feedback"></div>
-
-	<div id="divCampos" class="starter-template">
-
-		<div class="container" style="min-height: 500px">
-
-			<div id="feedback"></div>
-
-			<div id="divCampos" class="starter-template">
-				<div class="form-horizontal form-group form-group-sm col-sm-4">
-					<div class="form-group form-group-sm">
-						<label class="col-sm-4 control-label">Valor Inicial (R$)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyMask"
-								id="valorInicial" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É o valor do montante que se possui no momento do primeiro aporte."></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Valor Inicial (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyMask"
+							id="valorInicial" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É o valor do montante que se possui no momento do primeiro aporte."></div>
+				</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-4 control-label">Valor Aporte (R$)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyMask"
-								id="valorAporte" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É o valor do aporte mensal que se deseja fazer."></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Valor Aporte (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyMask" id="valorAporte" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É o valor do aporte mensal que se deseja fazer."></div>
+				</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-4 control-label">Valor Saque (R$)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyMask" id="valorSaque" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É o valor do saque mensal que se deseja fazer durante toda a aposentadoria."></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Valor Saque (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyMask" id="valorSaque" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É o valor do saque mensal que se deseja fazer durante toda a aposentadoria."></div>
+				</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-4 control-label">Qtde. Aportes</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control inteiro" id="qtdeAportes" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É o numero de aportes que se deseja efetuar ate o início dos saques (início da aposentadoria)."></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Qtde. Aportes</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control inteiro" id="qtdeAportes" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É o numero de aportes que se deseja efetuar ate o início dos saques (início da aposentadoria)."></div>
+				</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-4 control-label">Aplicação (%)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyMask"
-								id="aliquotaAplicacao" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É a alíquota anual da aplicacao que se espera fazer no início dos investimentos"></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Aplicação (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyMask"
+							id="aliquotaAplicacao" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É a alíquota anual da aplicacao que se espera fazer no início dos investimentos"></div>
+				</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-4 control-label">Reaplicação (%)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyMask"
-								id="aliquotaReaplicacao" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É a alíquota anual da aplicacao que se espera fazer no início dos investimentos"></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Reaplicação (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyMask"
+							id="aliquotaReaplicacao" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É a alíquota anual da aplicacao que se espera fazer no início dos investimentos"></div>
+				</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-4 control-label">IR (%)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyMask" id="aliquotaIR" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É a alíquota média de Imposto de Renda sobre os saques efetuados."></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">IR (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyMask" id="aliquotaIR" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É a alíquota média de Imposto de Renda sobre os saques efetuados."></div>
+				</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-4 control-label">Inflação (%)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyMask"
-								id="aliquotaInflacao" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É a alíquota média da inflação anual."></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-4 control-label">Inflação (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyMask"
+							id="aliquotaInflacao" />
 					</div>
-
-
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É a alíquota média da inflação anual."></div>
 				</div>
 
 
-				<div class="form-horizontal form-group form-group-sm col-sm-4">
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Val. Final (R$)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyFormat"
-								id="valorFinal" readonly="readonly" disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É o valor total do rendimento dos valores investidos ao longo de todos os aportes, mas esse valor nao leva em conta a depreciação da inflação."></div>
-					</div>
+			</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Val. Real (R$)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyFormat"
-								id="valorReal" readonly="readonly" disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É o valor total do rendimento dos valores investidos ao longo de todos os aportes subtraindo os efeitos da inflação no período."></div>
-					</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Val. Investido (R$)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyFormat"
-								id="valorInvestido" readonly="readonly" disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É a soma de todos os aportes efetuados, mas sem a incidencia dos juros."></div>
+			<div class="form-horizontal form-group form-group-sm col-sm-4">
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Final (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat"
+							id="valorFinal" readonly="readonly" disabled="disabled" />
 					</div>
-
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Val. Depreciado (R$)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyFormat"
-								id="valorInvestidoDepreciado" readonly="readonly"
-								disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="É o valor investido e depreciado pela inflação do período."></div>
-					</div>
-
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Ganho Final (%)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyFormat"
-								id="aliquotaGanhoFinal" readonly="readonly" disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="O percentual de ganho bruto dos investimentos."></div>
-					</div>
-
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Ganho Real (%)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyFormat"
-								id="aliquotaReal" readonly="readonly" disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip"
-							title="O percentual de ganho do investimento total com o efeito de depreciação pela inflação"></div>
-					</div>
-
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Infl. Acumulada (%)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyFormat"
-								id="aliquotaInflacaoAcumulada" readonly="readonly"
-								disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip" title="Alíquota da inflação acumulada no período."></div>
-					</div>
-
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É o valor total do rendimento dos valores investidos ao longo de todos os aportes, mas esse valor nao leva em conta a depreciação da inflação."></div>
 				</div>
 
-				<div class="form-horizontal form-group form-group-sm col-sm-4">
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Qtde. Máx. Saques</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control inteiro"
-								id="qtdeMaxSaques" readonly="readonly" disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip" title="A quantidade máxima de saques de acordo com o valor dos aportes e o valor de saque desejado."></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Real (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat" id="valorReal"
+							readonly="readonly" disabled="disabled" />
 					</div>
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Tempo Máx. Saques</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" id="periodoSaques"
-								readonly="readonly" disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip" title="O tempo máximo em que a quantia investida vai financiar a aposentadoria desejada."></div>
-					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É o valor total do rendimento dos valores investidos ao longo de todos os aportes subtraindo os efeitos da inflação no período."></div>
+				</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Val. Primeiro Saque
-							(R$)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyFormat"
-								id="valorPrimeiroSaque" readonly="readonly" disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip" title="A projeção futura do primeiro valor a ser sacado. É o valor do saque atual corrigido pela inflação até a data de início dos saques."></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Investido (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat"
+							id="valorInvestido" readonly="readonly" disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É a soma de todos os aportes efetuados, mas sem a incidencia dos juros."></div>
+				</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Val. Último Saque
-							(R$)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyFormat"
-								id="valorUltimoSaque" readonly="readonly" disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip" title="A projeção futura do último valor a ser sacado. É o valor do saque atual corrigido pela inflação até a data de último saque efetuado."></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Depreciado (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat"
+							id="valorInvestidoDepreciado" readonly="readonly"
+							disabled="disabled" />
 					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É o valor investido e depreciado pela inflação do período."></div>
+				</div>
 
-					<div class="form-group form-group-sm">
-						<label class="col-sm-5 control-label">Val. Restante (R$)</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control moneyFormat"
-								id="valorRestante" readonly="readonly" disabled="disabled" />
-						</div>
-						<div class="glyphicon glyphicon-question-sign"
-							data-toggle="tooltip" title="É o valor que restará investido após a realização do último saque."></div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Ganho Final (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat"
+							id="aliquotaGanhoFinal" readonly="readonly" disabled="disabled" />
+					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="O percentual de ganho bruto dos investimentos."></div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Ganho Real (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat"
+							id="aliquotaReal" readonly="readonly" disabled="disabled" />
+					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="O percentual de ganho do investimento total com o efeito de depreciação pela inflação"></div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Infl. Acumulada (%)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat"
+							id="aliquotaInflacaoAcumulada" readonly="readonly"
+							disabled="disabled" />
+					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="Alíquota da inflação acumulada no período."></div>
+				</div>
+
+			</div>
+
+			<div class="form-horizontal form-group form-group-sm col-sm-4">
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Qtde. Máx. Saques</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control inteiro" id="qtdeMaxSaques"
+							readonly="readonly" disabled="disabled" />
+					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="A quantidade máxima de saques de acordo com o valor dos aportes e o valor de saque desejado."></div>
+				</div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Tempo Máx. Saques</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" id="periodoSaques"
+							readonly="readonly" disabled="disabled" />
+					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="O tempo máximo em que a quantia investida vai financiar a aposentadoria desejada."></div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Primeiro Saque
+						(R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat"
+							id="valorPrimeiroSaque" readonly="readonly" disabled="disabled" />
+					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="A projeção futura do primeiro valor a ser sacado. É o valor do saque atual corrigido pela inflação até a data de início dos saques."></div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Último Saque
+						(R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat"
+							id="valorUltimoSaque" readonly="readonly" disabled="disabled" />
+					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="A projeção futura do último valor a ser sacado. É o valor do saque atual corrigido pela inflação até a data de último saque efetuado."></div>
+				</div>
+
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Restante (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat"
+							id="valorRestante" readonly="readonly" disabled="disabled" />
+					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É o valor que restará investido após a realização do último saque."></div>
+				</div>
+			</div>
+			<div class="form-horizontal form-group form-group-sm col-sm-12">
+				<div class="form-group col-sm-6">
+					<div>
+						<button type="button" id="botaoCalcular"
+							class="btn btn-primary btn-lg">Calcular</button>
 					</div>
 				</div>
-				<div class="form-horizontal form-group form-group-sm col-sm-12">
-					<div class="form-group col-sm-6">
-						<div>
-							<button type="button" id="botaoCalcular"
-								class="btn btn-primary btn-lg">Calcular</button>
-						</div>
-					</div>
-					<div class="form-group col-sm-6">
-						<div>
-							<button type="button" id="botaoShutdown"
-								class="btn btn-danger btn-lg">Encerrar</button>
-						</div>
+				<div class="form-group col-sm-6">
+					<div>
+						<button type="button" id="botaoShutdown"
+							class="btn btn-danger btn-lg">Encerrar</button>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<div class="container">
-			<footer>
-				<p>
-					© <a href="http://www.vinc.com.br">Vinc.com.br</a> 2019
-				</p>
-			</footer>
-		</div>
+	<div class="container">
+		<footer>
+			<p>
+				© <a href="http://www.vinc.com.br">Vinc.com.br</a> 2019
+			</p>
+		</footer>
+	</div>
 </body>
 </html>
