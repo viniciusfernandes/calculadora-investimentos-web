@@ -12,17 +12,18 @@ public class ProjecaoInvestimento {
     private double valorFinal;
     private double valorInvestido;
     private double valorInvestidoDepreciado;
+    private double valorIR;
     private double valorReal;
 
     public double getAliquotaAplicacaoMes() {
         return aliquotaAplicacaoMes;
     }
 
-    public double getAliquotaGanhoFinal() {
+	public double getAliquotaGanhoFinal() {
         return aliquotaGanhoFinal;
     }
 
-    public double getAliquotaGanhoReal() {
+	public double getAliquotaGanhoReal() {
         return aliquotaGanhoReal;
     }
 
@@ -57,6 +58,10 @@ public class ProjecaoInvestimento {
     public double getValorInvestidoDepreciado() {
         return valorInvestidoDepreciado;
     }
+
+    public double getValorIR() {
+		return valorIR;
+	}
 
     public double getValorReal() {
         return valorReal;
@@ -105,6 +110,10 @@ public class ProjecaoInvestimento {
     public void setValorInvestidoDepreciado(final double valorInvestidoDepreciado) {
         this.valorInvestidoDepreciado = valorInvestidoDepreciado;
     }
+
+    public void setValorIR(double valorIR) {
+		this.valorIR = valorIR;
+	}
 
     public void setValorReal(final double valorReal) {
         this.valorReal = valorReal;

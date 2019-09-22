@@ -37,6 +37,7 @@ public class CalculadoraInvestimento {
 	private double valorInvestidoDepreciado;
 	private double valorPrimeiroSaque;
 	private double valorReal;
+	private double valorIR;
 
 	private double valorRestante;
 
@@ -58,6 +59,7 @@ public class CalculadoraInvestimento {
 		projInvest.setValorFinal(valorFinal);
 		projInvest.setValorInvestido(valorInvestido);
 		projInvest.setValorInvestidoDepreciado(valorInvestidoDepreciado);
+		projInvest.setValorIR(valorIR);
 		projInvest.setValorReal(valorReal);
 		projInvest.setAliquotaAplicacaoMes(indiceAplicacaoMes * 100);
 		projInvest.setAliquotaReal(indiceReal * 100);
@@ -127,12 +129,16 @@ public class CalculadoraInvestimento {
 		valorPrimeiroSaque = valorSaque * pow(1 + indiceInflacaoMes, qtdeAportes);
 	}
 
-	private void calcularQtdeMaxSaques(double valorFinal, double valorSaque, final double indiceInflacao,
-			final double indiceReaplicacao, final double indiceLucro, int numSaque) {
+	private void calcularQtdeMaxSaques(double valorFinal, double valorSaque, double valorImpRenda,
+			final double indiceInflacao, final double indiceReaplicacao, final double indiceLucro, int numSaque) {
 		valorRestante = valorFinal;
 		qtdeMaxSaques = ++numSaque;
+		valorIR += valorImpRenda;
+
+		valorImpRenda = valorSaque * indiceLucro * indiceIR;
+
 		// Subtranido o valor do IR incidente no saque.
-		valorFinal -= (valorSaque + valorSaque * indiceLucro * indiceIR);
+		valorFinal -= (valorSaque + valorImpRenda);
 
 		if (valorFinal < 0) {
 			qtdeMaxSaques = --numSaque;
@@ -144,7 +150,8 @@ public class CalculadoraInvestimento {
 		valorSaque *= (1 + indiceInflacao);
 		valorFinal *= (1 + indiceReaplicacao);
 
-		calcularQtdeMaxSaques(valorFinal, valorSaque, indiceInflacao, indiceReaplicacao, indiceLucro, numSaque);
+		calcularQtdeMaxSaques(valorFinal, valorSaque, valorImpRenda, indiceInflacao, indiceReaplicacao, indiceLucro,
+				numSaque);
 	}
 
 	private void calcularQtdeMaxSaquesEValorRestante() {
@@ -153,7 +160,7 @@ public class CalculadoraInvestimento {
 		final double valorSaqueFuturo = valorSaque * pow((1 + indiceInflacaoMes), idxSaqueInicial);
 		final double indiceLucro = calcularIndiceLucroMedio();
 
-		calcularQtdeMaxSaques(valorFinal, valorSaqueFuturo, indiceInflacaoMes, indiceReaplicacaoMes, indiceLucro, 0);
+		calcularQtdeMaxSaques(valorFinal, valorSaqueFuturo, 0, indiceInflacaoMes, indiceReaplicacaoMes, indiceLucro, 0);
 		valorUltimoSaque = valorPrimeiroSaque * pow(1 + indiceInflacaoMes, qtdeMaxSaques - 1d);
 	}
 

@@ -158,6 +158,9 @@ pre>h5, pre>span {
 															$("#valorFinal")
 																	.val(
 																			projInvest.valorFinal);
+															$("#valorIR")
+																	.val(
+																			projInvest.valorIR);
 															$("#valorReal")
 																	.val(
 																			projInvest.valorReal);
@@ -251,15 +254,14 @@ pre>h5, pre>span {
 		<div id="divCampos" class="starter-template">
 			<div class="form-group form-group-lg col-lg-12">
 				<label class="col-lg-11 control-label text-right"> Vinc&reg;
-					- Fluxo de Investimentos para a Aposentadoria.
-				</label>
-				<label class="col-lg-11 control-label text-right"> O que é a calculadora???
-				</label>
-				<label id="oqueeh" class="col-lg-1 control-label text-left glyphicon glyphicon-question-sign">
+					- Fluxo de Investimentos para a Aposentadoria. </label> <label
+					class="col-lg-11 control-label text-right"> O que é a
+					calculadora??? </label> <label id="oqueeh"
+					class="col-lg-1 control-label text-left glyphicon glyphicon-question-sign">
 				</label>
 			</div>
 			<div class="form-group form-group-lg col-lg-12">
-				 <pre  id="oqueehDescricao" class="col-sm-12 control-label text-left">O objetivo principal é simular um cenário simplificado de investimentos para
+				<pre id="oqueehDescricao" class="col-sm-12 control-label ">O objetivo principal é simular um cenário simplificado de investimentos para
 se ter um fluxo de saques para a aposentadoria privada. A modelagem financeira pode ser exemplificada como a seguir: o investidor
 possui um valor inicial de R$50.000,00 e ele pretende aplicar esse montante com um rendimento anual de 8%. Aportes mensais
 de R$2.000,00 serão efetuados mensalmente com a taxa equivalente. Essa estratégia será feita por 20 anos (240 aportes), e ao término
@@ -404,6 +406,17 @@ efetuada nos valores de cada um dos saques efetuados, também para simular o cen
 					<div class="glyphicon glyphicon-question-sign"
 						data-toggle="tooltip"
 						title="É o valor investido e depreciado pela inflação do período."></div>
+				</div>
+				<div class="form-group form-group-sm">
+					<label class="col-sm-5 control-label">Val. Imp. Renda (R$)</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control moneyFormat"
+							id="valorIR" readonly="readonly"
+							disabled="disabled" />
+					</div>
+					<div class="glyphicon glyphicon-question-sign"
+						data-toggle="tooltip"
+						title="É o valor recolhido para o imposto de renda sobre o lucro no período."></div>
 				</div>
 
 				<div class="form-group form-group-sm">
