@@ -9,6 +9,14 @@ pre>h5, pre>span {
 	float: left;
 	width: 100%;
 }
+.descricao{
+	text-align: justify;
+}
+
+#aviso{
+	margin-top: 10px;
+	padding-top: 10px;
+}
 </style>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -99,15 +107,7 @@ pre>h5, pre>span {
 
 						initInvestimentos();
 						initMask();
-						$('#oqueehDescricao').hide();
-						$('#oqueeh').hover(function(e) {
-							$('#oqueehDescricao').show(300);
-						});
-
-						$('#oqueeh').mouseout(function(e) {
-							$('#oqueehDescricao').hide(300);
-						});
-
+						
 						$('[data-toggle="tooltip"]').tooltip();
 
 						$("#botaoCalcular")
@@ -253,23 +253,27 @@ pre>h5, pre>span {
 		<div id="feedback"></div>
 		<div id="divCampos" class="starter-template">
 			<div class="form-group form-group-lg col-lg-12">
-				<label class="col-lg-11 control-label text-right"> Vinc&reg;
-					- Fluxo de Investimentos para a Aposentadoria. </label> <label
-					class="col-lg-11 control-label text-right"> O que é a
-					calculadora??? </label> <label id="oqueeh"
-					class="col-lg-1 control-label text-left glyphicon glyphicon-question-sign">
-				</label>
+				<label class="col-lg-12 control-label text-right"> Vinc&reg;
+					- Fluxo de Investimentos para a Aposentadoria
+				</label> 
 			</div>
 			<div class="form-group form-group-lg col-lg-12">
-				<pre id="oqueehDescricao" class="col-sm-12 control-label ">O objetivo principal é simular um cenário simplificado de investimentos para
-se ter um fluxo de saques para a aposentadoria privada. A modelagem financeira pode ser exemplificada como a seguir: o investidor
-possui um valor inicial de R$50.000,00 e ele pretende aplicar esse montante com um rendimento anual de 8%. Aportes mensais
-de R$2.000,00 serão efetuados mensalmente com a taxa equivalente. Essa estratégia será feita por 20 anos (240 aportes), e ao término
-desse período, a quantia final será direcionada para um outro investimento, de perfil mais conservador e que rende 5% ao ano. À partir desse
-momento, o investidor efetuará saques mensais no valor de R$1.500,00. Além disso, o Imposto de Renda incidirá sobre o lucro
-de cada saque numa aliquota média de 12% e o índice de inflação anual no perído é de 4,5%. IMPORTANTE: para manter o poder de compra, estamos 
-modelando que a cada mês o investidor irá efetuar a correção monetária do aporte (reajuste da inflação), além disso, essa correção também será 
-efetuada nos valores de cada um dos saques efetuados, também para simular o cenário em que o investidor se preocupa em manter o poder de compra.</pre>
+			<div  class="col-sm-12 control-label descricao">
+				<label>O que é a calculadora???</label>  
+			</div>
+			<div  class="col-sm-12 control-label descricao">O objetivo principal é simular um cenário simplificado de investimentos para
+				se ter um fluxo de saques para a aposentadoria privada. A modelagem financeira pode ser exemplificada como a seguir: o investidor
+				possui um valor inicial de R$50.000,00 e ele pretende aplicar esse montante com um rendimento anual de 8%. Aportes mensais
+				de R$2.000,00 serão efetuados mensalmente com a taxa equivalente. Essa estratégia será feita por 20 anos (240 aportes), e ao término
+				desse período, a quantia final será direcionada para um outro investimento, de perfil mais conservador e que rende 5% ao ano. À partir desse
+				momento, o investidor efetuará saques mensais no valor de R$1.500,00. Além disso, o Imposto de Renda incidirá sobre o lucro
+				de cada saque numa aliquota média de 12% e o índice de inflação anual no perído é de 4,5%.
+			</div>
+				
+			<div id="aviso" class="col-sm-12 control-label descricao"> <b style="font-weight: bold;">IMPORTANTE:</b> para manter o poder de compra, estamos 
+				modelando que a cada mês o investidor irá efetuar a correção monetária do aporte (reajuste da inflação), além disso, essa correção também será 
+				efetuada nos valores de cada um dos saques efetuados, também para simular o cenário em que o investidor se preocupa em manter o poder de compra.
+			</div>
 
 			</div>
 			<div class="form-horizontal form-group form-group-sm col-sm-4">
@@ -515,14 +519,14 @@ efetuada nos valores de cada um dos saques efetuados, também para simular o cen
 			<div class="form-horizontal form-group form-group-sm col-sm-12">
 				<div class="form-group col-sm-6">
 					<div>
-						<button type="button" id="botaoCalcular"
-							class="btn btn-primary btn-lg">Calcular</button>
+						
 					</div>
 				</div>
-				<div class="form-group col-sm-6">
+				<div class="form-group col-sm-1">
 					<div>
-						<button type="button" id="botaoShutdown"
-							class="btn btn-danger btn-lg">Encerrar</button>
+						<button type="button" id="botaoCalcular" class="btn btn-primary btn-lg">Calcular</button>
+						<!--  button type="button" id="botaoShutdown"
+							class="btn btn-danger btn-lg">Encerrar</button-->
 					</div>
 				</div>
 			</div>
