@@ -113,6 +113,9 @@ public class CalculadoraInvestimento {
     }
 
     public double calcularIndiceReal(final double indice, final double indiceInflacao) {
+        if (indice <= indiceInflacao) {
+            return 0;
+        }
         return (1 + indice) / (1 + indiceInflacao) - 1;
     }
 
@@ -121,9 +124,11 @@ public class CalculadoraInvestimento {
         indiceInflacaoMes = calcularIndiceMensalEquivalente(indiceInflacao);
         indiceRealMes = calcularIndiceReal(indiceAplicacaoMes, indiceInflacaoMes);
 
-        valorFinalAplicado = calcularValorFinalAplicacao(valorAporte, valorInicial, indiceAplicacaoMes, qtdeAportes);
-        valorTotalInvestido = calcularValorTotalInvestido();
-        valorTotalRendimento = valorFinalAplicado - valorTotalInvestido;
+        var valoresTotais = calcularValorTotalRendimento(valorAporte, valorInicial, indiceAplicacaoMes, qtdeAportes);
+        valorFinalAplicado = valoresTotais.valorTotalAplicacao;
+        valorTotalInvestido = valoresTotais.valorTotalInvestido;
+        valorTotalRendimento = valoresTotais.valorTotalRendimento;
+
         valorReal = calcularValorReal();
         valorInvestidoDepreciado = valorAporte * calcularIndiceAcumulado(qtdeAportes, -indiceInflacaoMes);
 
@@ -137,6 +142,15 @@ public class CalculadoraInvestimento {
         }
         indiceInflacaoAcumuladaMes = calcularIndiceMensalEquivalente(indiceInflacaoAcumulada, qtdeAportes);
         valorPrimeiroSaque = valorSaque * pow(1 + indiceInflacaoMes, qtdeAportes);
+    }
+
+    public ValoresTotaisInvestimento calcularValorTotalRendimento(double valorAporte, double valorInicial, double indiceAplicacaoMes,
+                                                                  int qtdeAportes) {
+        var valoresTotais = new ValoresTotaisInvestimento();
+        valoresTotais.valorTotalAplicacao = calcularValorTotalAplicacao(valorAporte, valorInicial, indiceAplicacaoMes, qtdeAportes);
+        valoresTotais.valorTotalInvestido = calcularValorTotalInvestido(qtdeAportes, valorAporte, valorInicial);
+        valoresTotais.valorTotalRendimento = valoresTotais.valorTotalAplicacao - valoresTotais.valorTotalInvestido;
+        return valoresTotais;
     }
 
     public SimulacaoSaques calcularQuantidadeMaxSaques(double valorTotalInvestido, double valorTotalRendimento,
@@ -199,25 +213,22 @@ public class CalculadoraInvestimento {
     }
 
 
-    public double calcularValorFinalAplicacao(double valorAporte, double valorInicial, double indiceAplicacaoMes,
+    public double calcularValorTotalAplicacao(double valorAporte, double valorInicial, double indiceAplicacaoMes,
                                               int qtdeAportes) {
-        double valorRendimentoInvestimentoInicial = calcularValorRendimentoInvestimentoInicial(valorInicial, indiceAplicacaoMes, qtdeAportes);
+        double valorRendimentoInvestimentoInicial = calcularValorRendimentoInvestimentoInicial(
+            valorInicial, indiceAplicacaoMes, qtdeAportes);
         double mes = 1d;
         double valorAportesInvestidos = 0d;
-        do {
+        while (mes <= qtdeAportes) {
             valorAportesInvestidos += valorAporte * pow(1 + indiceAplicacaoMes, mes);
             mes++;
-        } while (mes <= qtdeAportes);
+        }
         return valorRendimentoInvestimentoInicial + valorAportesInvestidos;
     }
 
 
-    private double calcularValorTotalInvestido() {
-        double val = 0;
-        for (int i = 1; i <= qtdeAportes; i++) {
-            val += valorAporte;
-        }
-        return val;
+    public double calcularValorTotalInvestido(int qtdeAportes, double valorAporte, double valorInicial) {
+        return valorAporte * qtdeAportes + valorInicial;
     }
 
     private double calcularValorReal() {
