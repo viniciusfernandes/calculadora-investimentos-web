@@ -10,7 +10,6 @@ import static java.lang.Math.pow;
 
 public class CalculadoraInvestimento {
 
-    public static final int QTDE_MAX_SAQUES = 12 * 100;
     private double indiceAplicacao;
 
     private double indiceAplicacaoMes;
@@ -133,34 +132,55 @@ public class CalculadoraInvestimento {
         valorPrimeiroSaque = valorSaque * pow(1 + indiceInflacaoMes, qtdeAportes);
     }
 
-    private void calcularQtdeMaxSaques(double valorFinal, double valorSaque, double valorImpRenda,
-                                       final double indiceInflacao, final double indiceLucro, int numSaque) {
-        valorRestante = valorFinal;
-        qtdeMaxSaques = ++numSaque;
-        valorIR += valorImpRenda;
+    public SimulacaoSaques calcularQuantidadeMaxSaques(double valorTotalInvestido, double valorTotalRendimento,
+                                                       double valorSaque, double indiceInflacao,
+                                                       double indiceRendimento, double indiceIR) {
 
-        valorImpRenda = valorSaque * indiceLucro * indiceIR;
+        if (valorSaque <= 0 || valorTotalInvestido <= 0 ||
+            valorTotalInvestido < 0 || indiceInflacao < 0 ||
+            indiceRendimento < 0 || indiceIR < 0) {
+            return new SimulacaoSaques(0, 0, 0);
+        }
+        return calcularQuantidadeMaxSaques(valorTotalInvestido, valorTotalRendimento, valorSaque,
+            indiceInflacao, indiceRendimento, indiceIR, 0);
+    }
 
-        // Subtranido o valor do IR incidente no saque.
-        valorFinal -= (valorSaque + valorImpRenda);
+    private double valorTotalDisponivel;
 
-        if (valorFinal < 0) {
-            qtdeMaxSaques = --numSaque;
-            return;
-        } else if (valorFinal == 0 || numSaque >= QTDE_MAX_SAQUES) {
-            return;
+    private SimulacaoSaques calcularQuantidadeMaxSaques(double valorTotalInvestido, double valorTotalRendimento,
+                                                        double valorSaque, double indiceInflacao,
+                                                        double indiceRendimento, double indiceIR, int numSaque) {
+        valorTotalDisponivel = valorTotalInvestido + valorTotalRendimento;
+        if (valorTotalDisponivel < valorSaque) {
+            return new SimulacaoSaques(numSaque, valorIR, valorTotalDisponivel);
         }
 
+        if (valorSaque <= valorTotalRendimento) {
+            valorTotalRendimento -= valorSaque;
+            valorIR += valorSaque * indiceIR;
+        } else if (valorSaque > valorTotalRendimento && valorTotalRendimento > 0) {
+            valorIR += valorTotalRendimento * indiceIR;
+            valorTotalInvestido -= (valorSaque - valorTotalRendimento);
+            valorTotalRendimento = 0;
+        } else {
+            valorTotalInvestido -= valorSaque;
+        }
+
+        numSaque++;
+        // Reajustando o valor do saque para refletir os efeitos da inflacao na sil=mulacao
         valorSaque *= (1 + indiceInflacao);
-        calcularQtdeMaxSaques(valorFinal, valorSaque, valorImpRenda, indiceInflacao, indiceLucro,
-            numSaque);
+
+        // Aplicando a taxa de rendimento novamente pois esses valores permanecerao investidos
+        valorTotalRendimento = valorTotalRendimento * (1 + indiceRendimento) + valorTotalInvestido * indiceRendimento;
+        return calcularQuantidadeMaxSaques(valorTotalInvestido, valorTotalRendimento, valorSaque, indiceInflacao,
+            indiceRendimento, indiceIR, numSaque);
     }
 
     private void calcularQtdeMaxSaquesEValorRestante() {
         final double valorSaqueFuturo = valorSaque * pow((1 + indiceInflacaoMes), qtdeAportes);
         final double indiceRendMedio = calcularIndiceRendimentoMedio(valorFinalAplicado, valorTotalInvestido, qtdeAportes);
 
-        calcularQtdeMaxSaques(valorFinalAplicado, valorSaqueFuturo, 0, indiceInflacaoMes, indiceRendMedio, 0);
+        //calcularQuantidadeMaxSaques(valorFinalAplicado, valorSaqueFuturo, indiceInflacaoMes, indiceRendMedio, 1);
         valorUltimoSaque = valorPrimeiroSaque * pow(1 + indiceInflacaoMes, qtdeMaxSaques - 1d);
     }
 

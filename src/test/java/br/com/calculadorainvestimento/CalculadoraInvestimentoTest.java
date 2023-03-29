@@ -2,8 +2,9 @@ package br.com.calculadorainvestimento;
 
 import br.com.calculadorainvestimentos.algoritmo.CalculadoraInvestimento;
 import br.com.calculadorainvestimentos.model.Investimento;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class CalculadoraInvestimentoTest {
@@ -56,6 +57,36 @@ public class CalculadoraInvestimentoTest {
         assertValue(0.01333, calculadora.calcularIndiceRendimentoMedio(1200000, 50000, 240));
     }
 
+    @Test
+    public void testCalculoQuantidadeMaximaSaques() {
+        var simulacao = calculadora.calcularQuantidadeMaxSaques(0, 100, 400, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+
+        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+
+        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 400, -1, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+
+        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, -1, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+
+        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, 0.01, -1);
+        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+
+        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 400, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 1, simulacao.quantidadeMaxSaques);
+
+        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 700, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+
+        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 300, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 1, simulacao.quantidadeMaxSaques);
+
+        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 250, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 2, simulacao.quantidadeMaxSaques);
+    }
+
     private Investimento buildInvestimento() {
         var investimento = new Investimento();
         investimento.aliquotaAplicacao = 12;
@@ -69,6 +100,6 @@ public class CalculadoraInvestimentoTest {
     }
 
     private void assertValue(double expected, double actual) {
-        Assert.assertEquals("O valor nao está dentro do intervalo de aceitacao", expected, actual, delta);
+        assertEquals("O valor nao está dentro do intervalo de aceitacao", expected, actual, delta);
     }
 }
