@@ -6,4 +6,5 @@ public class ProjecaoSaque {
     public double valorPrimeiroSaque;
     public double valorRestante;
     public double valorUltimoSaque;
+    public boolean limiteCalculoExcedido;
 }

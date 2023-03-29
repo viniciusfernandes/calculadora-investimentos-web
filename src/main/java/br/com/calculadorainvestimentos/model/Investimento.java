@@ -7,11 +7,8 @@ public class Investimento implements Serializable {
     public double aliquotaAplicacao;
     public double aliquotaInflacao;
     public double aliquotaIR;
-    public double aliquotaReaplicacao;
-
     public int qtdeAportes;
     public double valorAporte;
     public double valorInicial;
     public double valorSaque;
-
 }

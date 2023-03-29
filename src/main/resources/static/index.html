@@ -119,9 +119,8 @@ pre>h5, pre>span {
 													.ajax({
 														type : "post",
 														contentType : "application/json",
-														url : "/investimentos/calculo",
-														data : JSON
-																.stringify(investimentos()),
+														url : "http://localhost:8081/calculadora-investimentos/investimentos/calculo",
+														data : JSON.stringify(investimentos()),
 														success : function(data) {
 
 															var json = "<h4>Ajax Response</h4><pre>"

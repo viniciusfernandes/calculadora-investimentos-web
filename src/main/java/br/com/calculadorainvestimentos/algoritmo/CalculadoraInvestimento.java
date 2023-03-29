@@ -6,6 +6,9 @@ import br.com.calculadorainvestimentos.model.PeriodoSaque;
 import br.com.calculadorainvestimentos.model.ProjecaoInvestimento;
 import br.com.calculadorainvestimentos.model.ProjecaoSaque;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static java.lang.Math.pow;
 
 public class CalculadoraInvestimento {
@@ -41,6 +44,8 @@ public class CalculadoraInvestimento {
 
     private double valorSaque;
     private double valorUltimoSaque;
+    private boolean limiteCalculoExcedido;
+    public static final int LIMITE_CALCULO_SAQUES = 800;
 
     public FluxoInvestimento calcular(final Investimento investimento) {
         inicializarIndices(investimento);
@@ -48,27 +53,27 @@ public class CalculadoraInvestimento {
         calcularQtdeMaxSaquesEValorRestante();
 
         final ProjecaoInvestimento projInvest = new ProjecaoInvestimento();
-        projInvest.aliquotaGanhoFinal = indiceGanhoFinal * 100;
-        projInvest.aliquotaGanhoReal = indiceGanhoReal * 100;
-        projInvest.aliquotaInflacaoAcumulada = indiceInflacaoAcumulada * 100;
-        projInvest.aliquotaInflacaoAcumuladaMes = indiceInflacaoAcumuladaMes * 100;
-        projInvest.aliquotaInflacaoMes = indiceInflacaoMes * 100;
+        projInvest.aliquotaGanhoFinal = arredondar(indiceGanhoFinal * 100);
+        projInvest.aliquotaGanhoReal = arredondar(indiceGanhoReal * 100);
+        projInvest.aliquotaInflacaoAcumulada = arredondar(indiceInflacaoAcumulada * 100);
+        projInvest.aliquotaInflacaoAcumuladaMes = arredondar(indiceInflacaoAcumuladaMes * 100);
+        projInvest.aliquotaInflacaoMes = arredondar(indiceInflacaoMes * 100);
         projInvest.qtdeAportes = qtdeAportes;
-        projInvest.valorFinal = valorFinalAplicado;
-        projInvest.valorInvestido = valorTotalInvestido;
-        projInvest.valorInvestidoDepreciado = valorInvestidoDepreciado;
-        projInvest.valorIR = valorIR;
-        projInvest.valorReal = valorReal;
-        projInvest.aliquotaAplicacaoMes = indiceAplicacaoMes * 100;
-        projInvest.aliquotaReal = indiceRealMes * 100;
+        projInvest.valorFinal = arredondar(valorFinalAplicado);
+        projInvest.valorInvestido = arredondar(valorTotalInvestido);
+        projInvest.valorInvestidoDepreciado = arredondar(valorInvestidoDepreciado);
+        projInvest.valorIR = arredondar(valorIR);
+        projInvest.valorReal = arredondar(valorReal);
+        projInvest.aliquotaAplicacaoMes = arredondar(indiceAplicacaoMes * 100);
+        projInvest.aliquotaReal = arredondar(indiceRealMes * 100);
 
         final ProjecaoSaque projSaque = new ProjecaoSaque();
         projSaque.qtdeMaxSaques = qtdeMaxSaques;
-        projSaque.valorPrimeiroSaque = valorPrimeiroSaque;
-        projSaque.valorRestante = valorRestante;
-        projSaque.valorUltimoSaque = valorUltimoSaque;
+        projSaque.valorPrimeiroSaque = arredondar(valorPrimeiroSaque);
+        projSaque.valorRestante = arredondar(valorRestante);
+        projSaque.valorUltimoSaque = arredondar(valorUltimoSaque);
         projSaque.periodoSaque = new PeriodoSaque(qtdeMaxSaques);
-
+        projSaque.limiteCalculoExcedido = limiteCalculoExcedido;
         return new FluxoInvestimento(projInvest, projSaque);
     }
 
@@ -135,16 +140,16 @@ public class CalculadoraInvestimento {
     }
 
     public SimulacaoSaques calcularQuantidadeMaxSaques(double valorTotalInvestido, double valorTotalRendimento,
-                                                       double valorSaque, double indiceInflacao,
-                                                       double indiceRendimento, double indiceIR) {
+                                                       double valorSaque, double indiceInflacaoMes,
+                                                       double indiceRendimentoMes, double indiceIR) {
 
         if (valorSaque <= 0 || valorTotalInvestido <= 0 ||
-            valorTotalInvestido < 0 || indiceInflacao < 0 ||
-            indiceRendimento < 0 || indiceIR < 0) {
-            return new SimulacaoSaques(0, 0, 0, 0);
+            valorTotalInvestido < 0 || indiceInflacaoMes < 0 ||
+            indiceRendimentoMes < 0 || indiceIR < 0) {
+            return new SimulacaoSaques(0, 0, 0, 0, false);
         }
         return calcularQuantidadeMaxSaques(valorTotalInvestido, valorTotalRendimento, valorSaque,
-            indiceInflacao, indiceRendimento, indiceIR, 0);
+            indiceInflacaoMes, indiceRendimentoMes, indiceIR, 0);
     }
 
     private double valorTotalDisponivel;
@@ -153,8 +158,9 @@ public class CalculadoraInvestimento {
                                                         double valorSaque, double indiceInflacao,
                                                         double indiceRendimento, double indiceIR, int numSaque) {
         valorTotalDisponivel = valorTotalInvestido + valorTotalRendimento;
-        if (valorTotalDisponivel < valorSaque) {
-            return new SimulacaoSaques(numSaque, valorIR, valorTotalDisponivel, valorSaque);
+        if (valorTotalDisponivel < valorSaque || numSaque >= LIMITE_CALCULO_SAQUES) {
+            return new SimulacaoSaques(numSaque, valorIR, valorTotalDisponivel, valorSaque,
+                numSaque >= LIMITE_CALCULO_SAQUES);
         }
 
         if (valorSaque <= valorTotalRendimento) {
@@ -171,7 +177,6 @@ public class CalculadoraInvestimento {
         numSaque++;
         // Reajustando o valor do saque para refletir os efeitos da inflacao na sil=mulacao
         valorSaque *= (1 + indiceInflacao);
-
         // Aplicando a taxa de rendimento novamente pois esses valores permanecerao investidos
         valorTotalRendimento = valorTotalRendimento * (1 + indiceRendimento) + valorTotalInvestido * indiceRendimento;
         return calcularQuantidadeMaxSaques(valorTotalInvestido, valorTotalRendimento, valorSaque, indiceInflacao,
@@ -180,11 +185,12 @@ public class CalculadoraInvestimento {
 
     private void calcularQtdeMaxSaquesEValorRestante() {
         var simulacao = calcularQuantidadeMaxSaques(valorTotalInvestido, valorTotalRendimento,
-            valorSaque, indiceInflacao, indiceAplicacao, indiceIR);
+            valorSaque, indiceInflacaoMes, indiceAplicacaoMes, indiceIR);
         qtdeMaxSaques = simulacao.quantidadeMaxSaques;
         valorUltimoSaque = simulacao.valorUltimoSaque;
         valorRestante = simulacao.valorRestante;
         valorIR = simulacao.valorIR;
+        limiteCalculoExcedido = simulacao.limiteCalculoExcedido;
     }
 
     public double calcularValorRendimentoInvestimentoInicial(double valorInicial, double indiceAplicacaoMes,
@@ -226,5 +232,11 @@ public class CalculadoraInvestimento {
         valorAporte = investimento.valorAporte;
         valorSaque = investimento.valorSaque;
         valorInicial = investimento.valorInicial;
+    }
+
+    private double arredondar(double valor) {
+        var bd = BigDecimal.valueOf(valor);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
