@@ -54,7 +54,6 @@ pre>h5, pre>span {
 
 	function initInvestimentos() {
 		$('#aliquotaAplicacao').val(moneyMask(8));
-		$('#aliquotaReaplicacao').val(moneyMask(5));
 		$('#aliquotaIR').val(moneyMask(12));
 		$('#aliquotaInflacao').val(moneyMask(4.5));
 		$('#qtdeAportes').val(240);
@@ -78,8 +77,6 @@ pre>h5, pre>span {
 
 		invest["aliquotaAplicacao"] = $('#aliquotaAplicacao').val().replace(
 				'.', '').replace(',', '.');
-		invest["aliquotaReaplicacao"] = $('#aliquotaReaplicacao').val()
-				.replace('.', '').replace(',', '.');
 		invest["aliquotaIR"] = $('#aliquotaIR').val().replace('.', '').replace(
 				',', '.');
 		invest["aliquotaInflacao"] = $('#aliquotaInflacao').val().replace('.',
@@ -163,10 +160,6 @@ pre>h5, pre>span {
 															$("#valorReal")
 																	.val(
 																			projInvest.valorReal);
-															$(
-																	"#valorInvestidoDepreciado")
-																	.val(
-																			projInvest.valorInvestidoDepreciado);
 															$("#valorInvestido")
 																	.val(
 																			projInvest.valorInvestido);
@@ -174,10 +167,6 @@ pre>h5, pre>span {
 																	"#aliquotaInflacaoMes")
 																	.val(
 																			projInvest.aliquotaInflacaoMes);
-															$(
-																	"#aliquotaInflacaoAcumulada")
-																	.val(
-																			projInvest.aliquotaInflacaoAcumulada);
 
 															$(
 																	"#aliquotaGanhoFinal")
@@ -193,7 +182,7 @@ pre>h5, pre>span {
 																			projInvest.aliquotaAplicacaoMes);
 															$("#aliquotaReal")
 																	.val(
-																			projInvest.aliquotaReal);
+																			projInvest.aliquotaGanhoReal);
 															toMoneyFormat();
 														},
 														error : function(e) {
@@ -329,18 +318,7 @@ pre>h5, pre>span {
 						title="É a alíquota anual da aplicacao que se espera fazer no início dos investimentos"></div>
 				</div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-4 control-label">Reaplicação (%)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyMask"
-							id="aliquotaReaplicacao" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É a alíquota anual da aplicacao que se espera fazer no início dos investimentos"></div>
-				</div>
-
-				<div class="form-group form-group-sm">
+				 <div class="form-group form-group-sm">
 					<label class="col-sm-4 control-label">IR (%)</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control moneyMask" id="aliquotaIR" />
@@ -398,18 +376,6 @@ pre>h5, pre>span {
 						data-toggle="tooltip"
 						title="É a soma de todos os aportes efetuados, mas sem a incidencia dos juros."></div>
 				</div>
-
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Val. Depreciado (R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat"
-							id="valorInvestidoDepreciado" readonly="readonly"
-							disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É o valor investido e depreciado pela inflação do período."></div>
-				</div>
 				<div class="form-group form-group-sm">
 					<label class="col-sm-5 control-label">Val. Imp. Renda (R$)</label>
 					<div class="col-sm-4">
@@ -442,18 +408,6 @@ pre>h5, pre>span {
 					<div class="glyphicon glyphicon-question-sign"
 						data-toggle="tooltip"
 						title="O percentual de ganho do investimento total com o efeito de depreciação pela inflação"></div>
-				</div>
-
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Infl. Acumulada (%)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat"
-							id="aliquotaInflacaoAcumulada" readonly="readonly"
-							disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="Alíquota da inflação acumulada no período."></div>
 				</div>
 
 			</div>
