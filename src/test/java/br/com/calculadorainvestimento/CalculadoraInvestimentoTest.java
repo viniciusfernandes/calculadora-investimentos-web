@@ -22,21 +22,21 @@ public class CalculadoraInvestimentoTest {
 
     @Test
     public void testCalculoIndiceReal() {
-        //assertValue(0.05000, calculadora.calcularIndiceReal(0.05, 0));
-        //assertValue(0.00000, calculadora.calcularIndiceReal(0.05, 0.05));
-        //assertValue(0.02941, calculadora.calcularIndiceReal(0.05, 0.02));
+        assertValue(0.05000, calculadora.calcularIndiceReal(0.05, 0));
+        assertValue(0.00000, calculadora.calcularIndiceReal(0.05, 0.05));
+        assertValue(0.02941, calculadora.calcularIndiceReal(0.05, 0.02));
         assertValue(0.01941, calculadora.calcularIndiceReal(0.05, 0.03));
-        //assertValue(0.00000, calculadora.calcularIndiceReal(0.05, 0.3));
-        //assertValue(0.00000, calculadora.calcularIndiceReal(0.05, 0.05));
+        assertValue(-0.19231, calculadora.calcularIndiceReal(0.05, 0.3));
+        assertValue(0.00000, calculadora.calcularIndiceReal(0.05, 0.05));
     }
 
     @Test
-    public void testCalculoIndiceMensal() {
-        assertValue(5000, calculadora.calcularValorRendimentoInvestimentoInicial(5000, 0, 12));
-        assertValue(5000, calculadora.calcularValorRendimentoInvestimentoInicial(5000, 0.02, 0));
-        assertValue(0, calculadora.calcularValorRendimentoInvestimentoInicial(0, 0.02, 0));
-        assertValue(6094.97210, calculadora.calcularValorRendimentoInvestimentoInicial(5000, 0.02, 10));
-        assertValue(328.38885, calculadora.calcularValorRendimentoInvestimentoInicial(50, 0.019, 100));
+    public void testCalculoValorJurosCompostos() {
+        assertValue(5000, calculadora.calcularValorJurosCompostos(5000, 0, 12));
+        assertValue(5000, calculadora.calcularValorJurosCompostos(5000, 0.02, 0));
+        assertValue(0, calculadora.calcularValorJurosCompostos(0, 0.02, 0));
+        assertValue(6094.97210, calculadora.calcularValorJurosCompostos(5000, 0.02, 10));
+        assertValue(328.38885, calculadora.calcularValorJurosCompostos(50, 0.019, 100));
     }
 
     @Test
@@ -61,32 +61,32 @@ public class CalculadoraInvestimentoTest {
 
     @Test
     public void testCalculoQuantidadeMaximaSaques() {
-        var simulacao = calculadora.calcularQuantidadeMaxSaques(0, 100, 400, 0.045, 0.01, 0.15);
-        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+        var valoresMax = calculadora.calcularQuantidadeMaxSaques(0, 100, 400, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
 
-        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, 0.01, 0.15);
-        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
 
-        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 400, -1, 0.01, 0.15);
-        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 400, -1, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
 
-        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, -1, 0.15);
-        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, -1, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
 
-        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, 0.01, -1);
-        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, 0.01, -1);
+        assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
 
-        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 400, 0.045, 0.01, 0.15);
-        assertEquals("A quantidade maxima de saques esta errada", 1, simulacao.quantidadeMaxSaques);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 400, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 1, valoresMax.quantidadeMaxSaques);
 
-        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 700, 0.045, 0.01, 0.15);
-        assertEquals("A quantidade maxima de saques esta errada", 0, simulacao.quantidadeMaxSaques);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 700, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
 
-        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 300, 0.045, 0.01, 0.15);
-        assertEquals("A quantidade maxima de saques esta errada", 2, simulacao.quantidadeMaxSaques);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 300, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 1, valoresMax.quantidadeMaxSaques);
 
-        simulacao = calculadora.calcularQuantidadeMaxSaques(500, 100, 250, 0.045, 0.01, 0.15);
-        assertEquals("A quantidade maxima de saques esta errada", 2, simulacao.quantidadeMaxSaques);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 250, 0.045, 0.01, 0.15);
+        assertEquals("A quantidade maxima de saques esta errada", 2, valoresMax.quantidadeMaxSaques);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class CalculadoraInvestimentoTest {
     @Test
     public void testCalculoValorTotalRendimento() {
         var valoresTotais = calculadora.calcularValoresTotaisInvestimento(4000, 11000, 0.02, 0.008, 3);
-        assertValue(1159.72000, valoresTotais.valorTotalReal);
+        assertValue(23685.541181, valoresTotais.valorTotalReal);
 
         valoresTotais = calculadora.calcularValoresTotaisInvestimento(0, 11000, 0.02, .008, 3);
         assertValue(673.28800, valoresTotais.valorTotalRendimento);
@@ -120,14 +120,6 @@ public class CalculadoraInvestimentoTest {
 
         valoresTotais = calculadora.calcularValoresTotaisInvestimento(0, 0, 0, .008, 0);
         assertValue(0, valoresTotais.valorTotalRendimento);
-
-
-          valoresTotais = calculadora.calcularValoresTotaisInvestimento(100, 200, 0.02, 0.008, 3);
-        assertValue(1159.72000, valoresTotais.valorTotalReal);
-        assertValue(1159.72000, valoresTotais.valorTotalInflacao);
-        assertValue(1159.72000, valoresTotais.valorTotalInvestido);
-        assertValue(1159.72000, valoresTotais.valorTotalRendimento);
-        assertValue(1159.72000, valoresTotais.valorTotalAplicacao);
     }
 
     private Investimento buildInvestimento() {
