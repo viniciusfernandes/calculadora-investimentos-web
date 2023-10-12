@@ -2,496 +2,506 @@
 <html>
 
 <head>
-<title>Fluxo de Investimentos</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<style type="text/css">
-pre>h5, pre>span {
-	float: left;
-	width: 100%;
-}
-.descricao{
-	text-align: justify;
-}
+    <title>Fluxo de Investimentos</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+        pre > h5, pre > span {
+            float: left;
+            width: 100%;
+        }
 
-#aviso{
-	margin-top: 10px;
-	padding-top: 10px;
-}
-</style>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        .descricao {
+            text-align: justify;
+        }
 
-<script src="js/jquery.mask.js"></script>
+        #aviso {
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+    </style>
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<script type="text/javascript">
-	function moneyMask(amount) {
-		try {
-			var decimalCount = 2;
-			var decimal = ",";
-			var thousands = ".";
-			decimalCount = Math.abs(decimalCount);
-			decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+    <script src="js/jquery.mask.js"></script>
 
-			const negativeSign = amount < 0 ? "-" : "";
+    <script type="text/javascript">
+        function moneyMask(amount) {
+            try {
+                var decimalCount = 2;
+                var decimal = ",";
+                var thousands = ".";
+                decimalCount = Math.abs(decimalCount);
+                decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
 
-			let i = parseInt(
-					amount = Math.abs(Number(amount) || 0)
-							.toFixed(decimalCount)).toString();
-			let j = (i.length > 3) ? i.length % 3 : 0;
+                const negativeSign = amount < 0 ? "-" : "";
 
-			return negativeSign
-					+ (j ? i.substr(0, j) + thousands : '')
-					+ i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands)
-					+ (decimalCount ? decimal
-							+ Math.abs(amount - i).toFixed(decimalCount).slice(
-									2) : "");
-		} catch (e) {
-			console.log(e)
-		}
-	};
+                let i = parseInt(
+                    amount = Math.abs(Number(amount) || 0)
+                        .toFixed(decimalCount)).toString();
+                let j = (i.length > 3) ? i.length % 3 : 0;
 
-	function initInvestimentos() {
-		$('#aliquotaAplicacao').val(moneyMask(8));
-		$('#aliquotaIR').val(moneyMask(12));
-		$('#aliquotaInflacao').val(moneyMask(4.5));
-		$('#qtdeAportes').val(240);
-		$('#valorAporte').val(moneyMask(2000));
-		$('#valorSaque').val(moneyMask(1500));
-		$('#valorInicial').val(moneyMask(50000.0));
-	};
+                return negativeSign
+                    + (j ? i.substr(0, j) + thousands : '')
+                    + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands)
+                    + (decimalCount ? decimal
+                        + Math.abs(amount - i).toFixed(decimalCount).slice(
+                            2) : "");
+            } catch (e) {
+                console.log(e)
+            }
+        };
 
-	function initMask() {
-		$('.moneyMask').mask("#.##0,00", {
-			reverse : true
-		});
+        function initInvestimentos() {
+            $('#aliquotaAplicacao').val(moneyMask(8));
+            $('#aliquotaIR').val(moneyMask(12));
+            $('#aliquotaInflacao').val(moneyMask(4.5));
+            $('#qtdeAportes').val(240);
+            $('#valorAporte').val(moneyMask(2000));
+            $('#valorSaque').val(moneyMask(1500));
+            $('#valorInicial').val(moneyMask(50000.0));
+        };
 
-		$('.inteiro').mask("#", {
-			reverse : false
-		});
-	};
+        function initMask() {
+            $('.moneyMask').mask("#.##0,00", {
+                reverse: true
+            });
 
-	function investimentos() {
-		var invest = {};
+            $('.inteiro').mask("#", {
+                reverse: false
+            });
+        };
 
-		invest["aliquotaAplicacao"] = $('#aliquotaAplicacao').val().replace(
-				'.', '').replace(',', '.');
-		invest["aliquotaIR"] = $('#aliquotaIR').val().replace('.', '').replace(
-				',', '.');
-		invest["aliquotaInflacao"] = $('#aliquotaInflacao').val().replace('.',
-				'').replace(',', '.');
-		invest["qtdeAportes"] = $('#qtdeAportes').val().replace('.', '')
-				.replace(',', '.');
-		invest["valorAporte"] = $('#valorAporte').val().replace('.', '')
-				.replace(',', '.');
-		invest["valorSaque"] = $('#valorSaque').val().replace('.', '').replace(
-				',', '.');
-		invest["valorInicial"] = $('#valorInicial').val().replace('.', '')
-				.replace(',', '.');
+        function investimentos() {
+            var invest = {};
 
-		return invest;
-	}
+            invest["aliquotaAplicacao"] = $('#aliquotaAplicacao').val().replace(
+                '.', '').replace(',', '.');
+            invest["aliquotaIR"] = $('#aliquotaIR').val().replace('.', '').replace(
+                ',', '.');
+            invest["aliquotaInflacao"] = $('#aliquotaInflacao').val().replace('.',
+                '').replace(',', '.');
+            invest["qtdeAportes"] = $('#qtdeAportes').val().replace('.', '')
+                .replace(',', '.');
+            invest["valorAporte"] = $('#valorAporte').val().replace('.', '')
+                .replace(',', '.');
+            invest["valorSaque"] = $('#valorSaque').val().replace('.', '').replace(
+                ',', '.');
+            invest["valorInicial"] = $('#valorInicial').val().replace('.', '')
+                .replace(',', '.');
 
-	function toMoneyFormat() {
-		$('.moneyFormat').each(function(e) {
-			$(this).val(moneyMask($(this).val()));
-		});
-	};
-	$(document)
-			.ready(
-					function() {
+            return invest;
+        }
 
-						initInvestimentos();
-						initMask();
-						
-						$('[data-toggle="tooltip"]').tooltip();
+        function toMoneyFormat() {
+            $('.moneyFormat').each(function (e) {
+                $(this).val(moneyMask($(this).val()));
+            });
+        };
+        $(document)
+            .ready(
+                function () {
 
-						$("#botaoCalcular")
+                    initInvestimentos();
+                    initMask();
 
-								.click(
-										function(event) {
+                    $('[data-toggle="tooltip"]').tooltip();
 
-											$
-													.ajax({
-														type : "post",
-														contentType : "application/json",
-														url : "http://localhost:8081/calculadora-investimentos/investimentos/calculo",
-														data : JSON.stringify(investimentos()),
-														success : function(data) {
+                    $("#botaoCalcular")
 
-															var json = "<h4>Ajax Response</h4><pre>"
-																	+ JSON
-																			.stringify(
-																					data,
-																					null,
-																					4)
-																	+ "</pre>";
+                        .click(
+                            function (event) {
 
-															projInvest = data.projecaoInvestimento;
-															projSaques = data.projecaoSaque;
-															$('#qtdeMaxSaques')
-																	.val(
-																			projSaques.qtdeMaxSaques);
-															$("#periodoSaques")
-																	.val(
-																			projSaques.periodoSaque.anos
-																					+ " ano(s) e "
-																					+ projSaques.periodoSaque.meses
-																					+ " mes(es)");
-															$(
-																	'#valorPrimeiroSaque')
-																	.val(
-																			projSaques.valorPrimeiroSaque);
-															$(
-																	'#valorUltimoSaque')
-																	.val(
-																			projSaques.valorUltimoSaque);
-															$('#valorRestante')
-																	.val(
-																			projSaques.valorRestante);
+                                $
+                                    .ajax({
+                                        type: "post",
+                                        contentType: "application/json",
+                                        url: "http://localhost:8081/calculadora-investimentos/investimentos/calculo",
+                                        data: JSON.stringify(investimentos()),
+                                        success: function (data) {
 
-															$("#valorFinal")
-																	.val(
-																			projInvest.valorFinal);
-															$("#valorIR")
-																	.val(
-																			projInvest.valorIR);
-															$("#valorReal")
-																	.val(
-																			projInvest.valorReal);
-															$("#valorInvestido")
-																	.val(
-																			projInvest.valorInvestido);
-															$(
-																	"#aliquotaInflacaoMes")
-																	.val(
-																			projInvest.aliquotaInflacaoMes);
+                                            var json = "<h4>Ajax Response</h4><pre>"
+                                                + JSON
+                                                    .stringify(
+                                                        data,
+                                                        null,
+                                                        4)
+                                                + "</pre>";
 
-															$(
-																	"#aliquotaGanhoFinal")
-																	.val(
-																			projInvest.aliquotaGanhoFinal);
-															$(
-																	"#aliquotaGanhoReal")
-																	.val(
-																			projInvest.aliquotaGanhoReal);
-															$(
-																	"#aliquotaAplicacaoMes")
-																	.val(
-																			projInvest.aliquotaAplicacaoMes);
-															$("#aliquotaReal")
-																	.val(
-																			projInvest.aliquotaGanhoReal);
-															toMoneyFormat();
-														},
-														error : function(e) {
+                                            projInvest = data.projecaoInvestimento;
+                                            projSaques = data.projecaoSaque;
+                                            $('#qtdeMaxSaques')
+                                                .val(
+                                                    projSaques.qtdeMaxSaques);
+                                            $("#periodoSaques")
+                                                .val(
+                                                    projSaques.periodoSaque.anos
+                                                    + " ano(s) e "
+                                                    + projSaques.periodoSaque.meses
+                                                    + " mes(es)");
+                                            $(
+                                                '#valorPrimeiroSaque')
+                                                .val(
+                                                    projSaques.valorPrimeiroSaque);
+                                            $(
+                                                '#valorUltimoSaque')
+                                                .val(
+                                                    projSaques.valorUltimoSaque);
+                                            $('#valorRestante')
+                                                .val(
+                                                    projSaques.valorRestante);
 
-															var json = "<h4>Ajax Response</h4><pre>"
-																	+ e.responseText
-																	+ "</pre>";
+                                            $("#valorFinal")
+                                                .val(
+                                                    projInvest.valorFinal);
+                                            $("#valorIR")
+                                                .val(
+                                                    projInvest.valorIR);
+                                            $("#valorReal")
+                                                .val(
+                                                    projInvest.valorReal);
+                                            $("#valorInvestido")
+                                                .val(
+                                                    projInvest.valorInvestido);
+                                            $(
+                                                "#aliquotaInflacaoMes")
+                                                .val(
+                                                    projInvest.aliquotaInflacaoMes);
 
-															console.log(
-																	"ERROR : ",
-																	e);
-														}
-													});
-										});
+                                            $(
+                                                "#aliquotaGanhoFinal")
+                                                .val(
+                                                    projInvest.aliquotaGanhoFinal);
+                                            $(
+                                                "#aliquotaGanhoReal")
+                                                .val(
+                                                    projInvest.aliquotaGanhoReal);
+                                            $(
+                                                "#aliquotaAplicacaoMes")
+                                                .val(
+                                                    projInvest.aliquotaAplicacaoMes);
+                                            $("#aliquotaReal")
+                                                .val(
+                                                    projInvest.aliquotaGanhoReal);
+                                            toMoneyFormat();
+                                        },
+                                        error: function (e) {
 
-						$("#botaoShutdown")
-								.click(
-										function(event) {
-											$
-													.ajax({
-														type : "post",
-														contentType : "application/json",
-														url : "/actuator/shutdown",
-														success : function(data) {
+                                            var json = "<h4>Ajax Response</h4><pre>"
+                                                + e.responseText
+                                                + "</pre>";
 
-															$('#feedback')
-																	.html(
-																			"<pre><h4>ENCERRANDO O SISTEMA!!!</h4></pre>");
-															$('#divCampos')
-																	.html("");
-															console
-																	.log(
-																			"SUCCESS : ",
-																			data);
+                                            console.log(
+                                                "ERROR : ",
+                                                e);
+                                        }
+                                    });
+                            });
 
-														}
-													});
+                    $("#botaoShutdown")
+                        .click(
+                            function (event) {
+                                $
+                                    .ajax({
+                                        type: "post",
+                                        contentType: "application/json",
+                                        url: "/actuator/shutdown",
+                                        success: function (data) {
 
-										});
+                                            $('#feedback')
+                                                .html(
+                                                    "<pre><h4>ENCERRANDO O SISTEMA!!!</h4></pre>");
+                                            $('#divCampos')
+                                                .html("");
+                                            console
+                                                .log(
+                                                    "SUCCESS : ",
+                                                    data);
 
-					});
-</script>
-<link rel="stylesheet" type="text/css"
-	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+                                        }
+                                    });
+
+                            });
+
+                });
+    </script>
+    <link rel="stylesheet" type="text/css"
+          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
 </head>
 <body>
 
-	<nav class="navbar navbar-inverse">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#"></a>
-			</div>
-		</div>
-	</nav>
-	<div class="container" style="min-height: 500px">
-		<div id="feedback"></div>
-		<div id="divCampos" class="starter-template">
-			<div class="form-group form-group-lg col-lg-12">
-				<label class="col-lg-12 control-label text-right"> Vinc&reg;
-					- Fluxo de Investimentos para a Aposentadoria
-				</label> 
-			</div>
-			<div class="form-group form-group-lg col-lg-12">
-			<div  class="col-sm-12 control-label descricao">
-				<label>O que é a calculadora???</label>  
-			</div>
-			<div  class="col-sm-12 control-label descricao">O objetivo principal é simular um cenário simplificado de investimentos para
-				se ter um fluxo de saques para a aposentadoria privada. A modelagem financeira pode ser exemplificada como a seguir: o investidor
-				possui um valor inicial de R$50.000,00 e ele pretende aplicar esse montante com um rendimento anual de 8%. Aportes mensais
-				de R$2.000,00 serão efetuados mensalmente com a taxa equivalente. Essa estratégia será feita por 20 anos (240 aportes), e ao término
-				desse período, a quantia final será direcionada para um outro investimento, de perfil mais conservador e que rende 5% ao ano. À partir desse
-				momento, o investidor efetuará saques mensais no valor de R$1.500,00. Além disso, o Imposto de Renda incidirá sobre o lucro
-				de cada saque numa aliquota média de 12% e o índice de inflação anual no perído é de 4,5%.
-			</div>
-				
-			<div id="aviso" class="col-sm-12 control-label descricao"> <b style="font-weight: bold;">IMPORTANTE:</b> para manter o poder de compra, estamos 
-				modelando que a cada mês o investidor irá efetuar a correção monetária do aporte (reajuste da inflação), além disso, essa correção também será 
-				efetuada nos valores de cada um dos saques efetuados, também para simular o cenário em que o investidor se preocupa em manter o poder de compra.
-			</div>
+<nav class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#"></a>
+        </div>
+    </div>
+</nav>
+<div class="container" style="min-height: 500px">
+    <div id="feedback"></div>
+    <div id="divCampos" class="starter-template">
+        <div class="form-group form-group-lg col-lg-12">
+            <label class="col-lg-12 control-label text-right"> Vinc&reg;
+                - Fluxo de Investimentos para a Aposentadoria
+            </label>
+        </div>
+        <div class="form-group form-group-lg col-lg-12">
+            <div class="col-sm-12 control-label descricao">
+                <label>O que é a calculadora???</label>
+            </div>
+            <div class="col-sm-12 control-label descricao">O objetivo principal é simular um cenário simplificado de
+                investimentos para
+                se ter um fluxo de saques para a aposentadoria privada. A modelagem financeira pode ser exemplificada
+                como a seguir: o investidor
+                possui um valor inicial de R$50.000,00 e ele pretende aplicar esse montante com um rendimento anual de
+                8%. Aportes mensais
+                de R$2.000,00 serão efetuados mensalmente com a taxa equivalente. Essa estratégia será feita por 20 anos
+                (240 aportes), e ao término
+                desse período, a quantia final será direcionada para um outro investimento, de perfil mais conservador e
+                que rende 5% ao ano. À partir desse
+                momento, o investidor efetuará saques mensais no valor de R$1.500,00. Além disso, o Imposto de Renda
+                incidirá sobre o lucro
+                de cada saque numa aliquota média de 12% e o índice de inflação anual no perído é de 4,5%.
+            </div>
 
-			</div>
-			<div class="form-horizontal form-group form-group-sm col-sm-4">
+            <div id="aviso" class="col-sm-12 control-label descricao"><b style="font-weight: bold;">IMPORTANTE:</b> para
+                manter o poder de compra, estamos
+                modelando que a cada mês o investidor irá efetuar a correção monetária do aporte (reajuste da inflação),
+                além disso, essa correção também será
+                efetuada nos valores de cada um dos saques efetuados, também para simular o cenário em que o investidor
+                se preocupa em manter o poder de compra.
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-4 control-label">Valor Inicial (R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyMask"
-							id="valorInicial" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É o valor do montante que se possui no momento do primeiro aporte."></div>
-				</div>
+        </div>
+        <div class="form-horizontal form-group form-group-sm col-sm-4">
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-4 control-label">Valor Aporte (R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyMask" id="valorAporte" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É o valor do aporte mensal que se deseja fazer."></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-4 control-label">Valor Inicial (R$)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyMask"
+                           id="valorInicial"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É o valor do montante que se possui no momento do primeiro aporte."></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-4 control-label">Valor Saque (R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyMask" id="valorSaque" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É o valor do saque mensal que se deseja fazer durante toda a aposentadoria."></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-4 control-label">Valor Aporte (R$)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyMask" id="valorAporte"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É o valor do aporte mensal que se deseja fazer."></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-4 control-label">Qtde. Aportes</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control inteiro" id="qtdeAportes" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É o numero de aportes que se deseja efetuar ate o início dos saques (início da aposentadoria)."></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-4 control-label">Valor Saque (R$)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyMask" id="valorSaque"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É o valor do saque mensal que se deseja fazer durante toda a aposentadoria."></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-4 control-label">Aplicação (%)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyMask"
-							id="aliquotaAplicacao" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É a alíquota anual da aplicacao que se espera fazer no início dos investimentos"></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-4 control-label">Qtde. Aportes</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control inteiro" id="qtdeAportes"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É o numero de aportes que se deseja efetuar ate o início dos saques (início da aposentadoria)."></div>
+            </div>
 
-				 <div class="form-group form-group-sm">
-					<label class="col-sm-4 control-label">IR (%)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyMask" id="aliquotaIR" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É a alíquota média de Imposto de Renda sobre os saques efetuados."></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-4 control-label">Aplicação (%)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyMask"
+                           id="aliquotaAplicacao"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É a alíquota anual da aplicacao que se espera fazer no início dos investimentos"></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-4 control-label">Inflação (%)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyMask"
-							id="aliquotaInflacao" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É a alíquota média da inflação anual."></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-4 control-label">IR (%)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyMask" id="aliquotaIR"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É a alíquota média de Imposto de Renda sobre os saques efetuados."></div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-4 control-label">Inflação (%)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyMask"
+                           id="aliquotaInflacao"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É a alíquota média da inflação anual."></div>
+            </div>
 
 
-			</div>
+        </div>
 
 
-			<div class="form-horizontal form-group form-group-sm col-sm-4">
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Val. Final (R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat"
-							id="valorFinal" readonly="readonly" disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É o valor total do rendimento dos valores investidos ao longo de todos os aportes, mas esse valor nao leva em conta a depreciação da inflação."></div>
-				</div>
+        <div class="form-horizontal form-group form-group-sm col-sm-4">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Val. Final (R$)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyFormat"
+                           id="valorFinal" readonly="readonly" disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É o valor total do rendimento dos valores investidos ao longo de todos os aportes, mas esse valor nao leva em conta a depreciação da inflação."></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Val. Real (R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat" id="valorReal"
-							readonly="readonly" disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É o valor total do rendimento dos valores investidos ao longo de todos os aportes subtraindo os efeitos da inflação no período."></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Val. Real (R$)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyFormat" id="valorReal"
+                           readonly="readonly" disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É o valor total do rendimento dos valores investidos ao longo de todos os aportes subtraindo os efeitos da inflação no período."></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Val. Investido (R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat"
-							id="valorInvestido" readonly="readonly" disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É a soma de todos os aportes efetuados, mas sem a incidencia dos juros."></div>
-				</div>
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Val. Imp. Renda (R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat"
-							id="valorIR" readonly="readonly"
-							disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É o valor recolhido para o imposto de renda sobre o lucro no período."></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Val. Investido (R$)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyFormat"
+                           id="valorInvestido" readonly="readonly" disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É a soma de todos os aportes efetuados, mas sem a incidencia dos juros."></div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Val. Imp. Renda (R$)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyFormat"
+                           id="valorIR" readonly="readonly"
+                           disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É o valor recolhido para o imposto de renda sobre o lucro no período."></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Ganho Final (%)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat"
-							id="aliquotaGanhoFinal" readonly="readonly" disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="O percentual de ganho bruto dos investimentos."></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Ganho Final (%)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyFormat"
+                           id="aliquotaGanhoFinal" readonly="readonly" disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="O percentual de ganho bruto dos investimentos."></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Ganho Real (%)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat"
-							id="aliquotaReal" readonly="readonly" disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="O percentual de ganho do investimento total com o efeito de depreciação pela inflação"></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Ganho Real (%)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyFormat"
+                           id="aliquotaReal" readonly="readonly" disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="O percentual de ganho do investimento total com o efeito de depreciação pela inflação"></div>
+            </div>
 
-			</div>
+        </div>
 
-			<div class="form-horizontal form-group form-group-sm col-sm-4">
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Qtde. Máx. Saques</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control inteiro" id="qtdeMaxSaques"
-							readonly="readonly" disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="A quantidade máxima de saques de acordo com o valor dos aportes e o valor de saque desejado."></div>
-				</div>
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Tempo Máx. Saques</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control" id="periodoSaques"
-							readonly="readonly" disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="O tempo máximo em que a quantia investida vai financiar a aposentadoria desejada."></div>
-				</div>
+        <div class="form-horizontal form-group form-group-sm col-sm-4">
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Qtde. Máx. Saques</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control inteiro" id="qtdeMaxSaques"
+                           readonly="readonly" disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="A quantidade máxima de saques de acordo com o valor dos aportes e o valor de saque desejado."></div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Tempo Máx. Saques</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="periodoSaques"
+                           readonly="readonly" disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="O tempo máximo em que a quantia investida vai financiar a aposentadoria desejada."></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Val. Primeiro Saque
-						(R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat"
-							id="valorPrimeiroSaque" readonly="readonly" disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="A projeção futura do primeiro valor a ser sacado. É o valor do saque atual corrigido pela inflação até a data de início dos saques."></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Val. Primeiro Saque
+                    (R$)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyFormat"
+                           id="valorPrimeiroSaque" readonly="readonly" disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="A projeção futura do primeiro valor a ser sacado. É o valor do saque atual corrigido pela inflação até a data de início dos saques."></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Val. Último Saque
-						(R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat"
-							id="valorUltimoSaque" readonly="readonly" disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="A projeção futura do último valor a ser sacado. É o valor do saque atual corrigido pela inflação até a data de último saque efetuado."></div>
-				</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Val. Último Saque
+                    (R$)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyFormat"
+                           id="valorUltimoSaque" readonly="readonly" disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="A projeção futura do último valor a ser sacado. É o valor do saque atual corrigido pela inflação até a data de último saque efetuado."></div>
+            </div>
 
-				<div class="form-group form-group-sm">
-					<label class="col-sm-5 control-label">Val. Restante (R$)</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control moneyFormat"
-							id="valorRestante" readonly="readonly" disabled="disabled" />
-					</div>
-					<div class="glyphicon glyphicon-question-sign"
-						data-toggle="tooltip"
-						title="É o valor que restará investido após a realização do último saque."></div>
-				</div>
-			</div>
-			<div class="form-horizontal form-group form-group-sm col-sm-12">
-				<div class="form-group col-sm-6">
-					<div>
-						
-					</div>
-				</div>
-				<div class="form-group col-sm-1">
-					<div>
-						<button type="button" id="botaoCalcular" class="btn btn-primary btn-lg">Calcular</button>
-						<!--  button type="button" id="botaoShutdown"
-							class="btn btn-danger btn-lg">Encerrar</button-->
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+            <div class="form-group form-group-sm">
+                <label class="col-sm-5 control-label">Val. Restante (R$)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control moneyFormat"
+                           id="valorRestante" readonly="readonly" disabled="disabled"/>
+                </div>
+                <div class="glyphicon glyphicon-question-sign"
+                     data-toggle="tooltip"
+                     title="É o valor que restará investido após a realização do último saque."></div>
+            </div>
+        </div>
+        <div class="form-horizontal form-group form-group-sm col-sm-12">
+            <div class="form-group col-sm-6">
+                <div>
 
-	<div class="container">
-		<footer>
-			<p>
-				© <a href="http://www.vinc.com.br">Vinc.com.br</a> 2019
-			</p>
-		</footer>
-	</div>
+                </div>
+            </div>
+            <div class="form-group col-sm-1">
+                <div>
+                    <button type="button" id="botaoCalcular" class="btn btn-primary btn-lg">Calcular</button>
+                    <!--  button type="button" id="botaoShutdown"
+                        class="btn btn-danger btn-lg">Encerrar</button-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <footer>
+        <p>
+            © <a href="http://www.vinc.com.br">Vinc.com.br</a> 2019
+        </p>
+    </footer>
+</div>
 </body>
 </html>

@@ -1,10 +1,6 @@
 package br.com.calculadorainvestimentos.algoritmo;
 
-import br.com.calculadorainvestimentos.model.FluxoInvestimento;
-import br.com.calculadorainvestimentos.model.Investimento;
-import br.com.calculadorainvestimentos.model.PeriodoSaque;
-import br.com.calculadorainvestimentos.model.ProjecaoInvestimento;
-import br.com.calculadorainvestimentos.model.ProjecaoSaque;
+import br.com.calculadorainvestimentos.model.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,26 +8,28 @@ import java.math.RoundingMode;
 import static java.lang.Math.pow;
 
 public class CalculadoraInvestimento {
-    public static final int LIMITE_CALCULO_SAQUES = 800;
+    public static final int LIMITE_CALCULO_SAQUES = 1000;
 
     public FluxoInvestimento calcular(final Investimento investimento) {
         var indices = calculadarIndicesMes(investimento);
 
         var valoresTotais = calcularValoresTotaisInvestimento(
-            investimento.valorAporte, investimento.valorInicial,
-            indices.indiceAplicacaoMes, indices.indiceInflacaoMes,
-            investimento.qtdeAportes);
+                investimento.valorAporte, investimento.valorInicial,
+                indices.indiceAplicacaoMes, indices.indiceInflacaoMes,
+                investimento.qtdeAportes);
 
         var indiceGanhoFinal = calcularIndiceRelativo(valoresTotais.valorTotalAplicacao, valoresTotais.valorTotalInvestido);
         var indiceGanhoReal = calcularIndiceRelativo(valoresTotais.valorTotalReal, valoresTotais.valorTotalInvestido);
+        // Levando o valor do primeiro saque para o futuro
         var valorPrimeiroSaque = calcularValorJurosCompostos(investimento.valorSaque, indices.indiceInflacaoMes, investimento.qtdeAportes);
 
         var valoresMaximos = calcularQuantidadeMaxSaques(
-            valoresTotais.valorTotalInvestido,
-            valoresTotais.valorTotalRendimento,
-            valorPrimeiroSaque, indices.indiceInflacaoMes,
-            indices.indiceAplicacaoMes, indices.indiceIR);
-
+                valoresTotais.valorTotalInvestido,
+                valoresTotais.valorTotalAplicacao,
+                valorPrimeiroSaque,
+                indices.indiceInflacaoMes,
+                indices.indiceAplicacaoMes,
+                indices.indiceIR);
 
         final ProjecaoInvestimento projInvest = new ProjecaoInvestimento();
         projInvest.aliquotaGanhoFinal = arredondar(indiceGanhoFinal * 100);
@@ -99,43 +97,43 @@ public class CalculadoraInvestimento {
         return valoresTotais;
     }
 
-    public CalculoValoresMaximos calcularQuantidadeMaxSaques(double valorTotalInvestido, double valorTotalRendimento,
-                                                             double valorSaque, double indiceInflacaoMes,
-                                                             double indiceRendimentoMes, double indiceIR) {
+    public CalculoValoresMaximos calcularQuantidadeMaxSaques(final double valorTotalInvestido, final double valorTotalAplicacao,
+                                                             final double valorSaque, final double indiceInflacaoMes,
+                                                             final double indiceRendimentoMes, final double indiceIR) {
 
 
-        if (valorSaque <= 0 || valorTotalInvestido <= 0 ||
-            valorTotalInvestido < 0 || indiceInflacaoMes < 0 ||
-            indiceRendimentoMes < 0 || indiceIR < 0) {
+        if (valorSaque < 0 || indiceInflacaoMes < 0 || indiceRendimentoMes < 0 || indiceIR < 0) {
             return new CalculoValoresMaximos(0, 0, 0, 0, false);
         }
 
-        double valorTotalDisponivel = 0;
+        double valorTotalIR = 0;
         double valorIR = 0;
+        double valorUltimoSaque = valorSaque;
+        double valorDisponivelSaque = valorTotalAplicacao;
+        double rendimento = valorDisponivelSaque - valorTotalInvestido;
         int numSaque = 0;
         while (true) {
-            valorTotalDisponivel = valorTotalInvestido + valorTotalRendimento;
-            if (valorTotalDisponivel < valorSaque || numSaque >= LIMITE_CALCULO_SAQUES) {
-                return new CalculoValoresMaximos(numSaque, valorIR, valorTotalDisponivel, valorSaque,
-                    numSaque >= LIMITE_CALCULO_SAQUES);
+            if (valorUltimoSaque > valorDisponivelSaque || numSaque >= LIMITE_CALCULO_SAQUES) {
+                return new CalculoValoresMaximos(numSaque, valorTotalIR, valorDisponivelSaque, valorUltimoSaque,
+                        numSaque >= LIMITE_CALCULO_SAQUES);
             }
-
-            if (valorSaque <= valorTotalRendimento) {
-                valorTotalRendimento -= valorSaque;
-                valorIR += valorSaque * indiceIR;
-            } else if (valorSaque > valorTotalRendimento && valorTotalRendimento > 0) {
-                valorIR += valorTotalRendimento * indiceIR;
-                valorTotalInvestido -= (valorSaque - valorTotalRendimento);
-                valorTotalRendimento = 0;
-            } else {
-                valorTotalInvestido -= valorSaque;
+            if (rendimento > 0) {
+                if (valorUltimoSaque <= rendimento) {
+                    valorIR = valorUltimoSaque * indiceIR;
+                } else {
+                    valorIR = rendimento * indiceIR;
+                }
             }
-
-            numSaque++;
-            // Reajustando o valor do saque para refletir os efeitos da inflacao na sil=mulacao
-            valorSaque *= (1 + indiceInflacaoMes);
+            valorTotalIR += valorIR;
+            valorDisponivelSaque -= (valorUltimoSaque + valorIR);
             // Aplicando a taxa de rendimento novamente pois esses valores permanecerao investidos
-            valorTotalRendimento = valorTotalRendimento * (1 + indiceRendimentoMes) + valorTotalInvestido * indiceRendimentoMes;
+            valorDisponivelSaque *= (1 + indiceRendimentoMes);
+            // Reajustando o valor do saque para refletir os efeitos da inflacao na sil=mulacao
+            valorUltimoSaque *= (1 + indiceInflacaoMes);
+
+            rendimento = valorDisponivelSaque - valorTotalInvestido;
+            numSaque++;
+            valorIR = 0;
         }
     }
 
@@ -147,7 +145,7 @@ public class CalculadoraInvestimento {
     public double calcularValorTotalAplicacao(double valorAporte, double valorInicial, double indiceAplicacaoMes,
                                               int qtdeAportes) {
         double valorRendimentoInvestimentoInicial = calcularValorJurosCompostos(
-            valorInicial, indiceAplicacaoMes, qtdeAportes);
+                valorInicial, indiceAplicacaoMes, qtdeAportes);
         double mes = 1d;
         double valorAportesInvestidos = 0d;
         while (mes <= qtdeAportes) {

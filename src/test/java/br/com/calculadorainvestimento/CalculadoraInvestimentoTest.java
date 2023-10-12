@@ -65,7 +65,7 @@ public class CalculadoraInvestimentoTest {
         assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
 
         valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, 0.01, 0.15);
-        assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
+        assertEquals("A quantidade maxima de saques esta errada", 1000, valoresMax.quantidadeMaxSaques);
 
         valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 400, -1, 0.01, 0.15);
         assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
@@ -76,16 +76,16 @@ public class CalculadoraInvestimentoTest {
         valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 0, 0.045, 0.01, -1);
         assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
 
-        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 400, 0.045, 0.01, 0.15);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 600, 400, 0.045, 0.01, 0.15);
         assertEquals("A quantidade maxima de saques esta errada", 1, valoresMax.quantidadeMaxSaques);
 
         valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 700, 0.045, 0.01, 0.15);
         assertEquals("A quantidade maxima de saques esta errada", 0, valoresMax.quantidadeMaxSaques);
 
-        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 300, 0.045, 0.01, 0.15);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(50, 300, 300, 0.045, 0.01, 0.15);
         assertEquals("A quantidade maxima de saques esta errada", 1, valoresMax.quantidadeMaxSaques);
 
-        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 100, 250, 0.045, 0.01, 0.15);
+        valoresMax = calculadora.calcularQuantidadeMaxSaques(500, 600, 250, 0.045, 0.01, 0.15);
         assertEquals("A quantidade maxima de saques esta errada", 2, valoresMax.quantidadeMaxSaques);
     }
 
