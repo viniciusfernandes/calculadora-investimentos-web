@@ -75,7 +75,7 @@ public class CalculadoraInvestimento {
         return valorFinal / valorInicial - 1;
     }
 
-    public double calcularIndiceMensalEquivalente(final double indiceAnual) {
+    public double calcularIndiceAnualEquivalente(final double indiceAnual) {
         return calcularIndiceMensalEquivalente(indiceAnual, 12);
     }
 
@@ -162,9 +162,9 @@ public class CalculadoraInvestimento {
 
     private IndicesInvestimento calculadarIndicesMes(final Investimento investimento) {
         var indices = new IndicesInvestimento();
-        indices.indiceAplicacaoMes = calcularIndiceMensalEquivalente(investimento.aliquotaAplicacao / 100);
+        indices.indiceAplicacaoMes = calcularIndiceAnualEquivalente(investimento.aliquotaAplicacao / 100);
         indices.indiceIR = investimento.aliquotaIR / 100;
-        indices.indiceInflacaoMes = calcularIndiceMensalEquivalente(investimento.aliquotaInflacao / 100);
+        indices.indiceInflacaoMes = calcularIndiceAnualEquivalente(investimento.aliquotaInflacao / 100);
         indices.indiceRealMes = calcularIndiceReal(indices.indiceAplicacaoMes, indices.indiceInflacaoMes);
         return indices;
     }
